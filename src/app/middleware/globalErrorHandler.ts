@@ -19,7 +19,7 @@ export const globalErrorHandler = (
   res.status(statusCode).send({
     success: false,
     message,
-    statusCode,
+    errorSource,
     stack: config.NODE_ENV === 'Development' ? error.stack : '',
   });
 };
