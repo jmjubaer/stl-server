@@ -61,7 +61,7 @@ export const globalErrorHandler = (
     ];
   }
 
-  res.status(statusCode).send({
+  res.status(statusCode).json({
     success: false,
     message,
     errorSources,
