@@ -24,4 +24,9 @@ const userSchema = new Schema<TUser>(
   },
 );
 
+// userSchema.pre('save', async (next) => {
+//   const user = this;
+//   user.password === 
+// });
+
 export const userModel = model<TUser>('User', userSchema);
