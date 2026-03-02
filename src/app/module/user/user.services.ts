@@ -10,8 +10,7 @@ const getMeFromDb = async (id: string) => {
   const result = await userModel.findById(id);
   return result;
 };
-const updateMeIntoDb = async (id: string, payload: TUser) => {
- 
+const updateMeIntoDb = async (id: string, payload: Partial<TUser>) => {
   const result = await userModel.findByIdAndUpdate(id, payload);
   return result;
 };
