@@ -18,6 +18,10 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -26,7 +30,7 @@ const userSchema = new Schema<TUser>(
 
 // userSchema.pre('save', async (next) => {
 //   const user = this;
-//   user.password === 
+//   user?.password =
 // });
 
 export const userModel = model<TUser>('User', userSchema);
