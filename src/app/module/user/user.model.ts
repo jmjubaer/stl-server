@@ -11,6 +11,7 @@ const userSchema = new Schema<TUser>(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     image: {
       type: String,
@@ -18,6 +19,7 @@ const userSchema = new Schema<TUser>(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     isDeleted: {
       type: Boolean,
