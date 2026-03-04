@@ -18,7 +18,10 @@ const loginUser = async (payload: TLogin) => {
     throw new AppError(401, 'User does not exist');
   }
 
-  const isPasswordMatch = await checkPassword(payload?.password, user?.password);
+  const isPasswordMatch = await checkPassword(
+    payload?.password,
+    user?.password,
+  );
 
   if (!isPasswordMatch) {
     throw new AppError(403, 'Incorrect password');
@@ -44,7 +47,8 @@ const loginUser = async (payload: TLogin) => {
   };
 };
 
-const refreshToken = async (token: string) => {
+const getAccessTokenByRefreshToken = async (token: string) => {
+    console.log(token);
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const user = await userModel.findById(decoded?.id);
@@ -71,5 +75,5 @@ const refreshToken = async (token: string) => {
 
 export const authServices = {
   loginUser,
-  refreshToken,
+  getAccessTokenByRefreshToken,
 };

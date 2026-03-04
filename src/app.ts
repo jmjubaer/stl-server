@@ -4,12 +4,12 @@ import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { notFound } from './app/middleware/notFound';
 import { userRoutes } from './app/module/user/user.routes';
 import { authRoutes } from './app/module/auth/auth.route';
-
+import cookieParser from 'cookie-parser';
 const app: Application = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 app.get('/', (req: Request, res: Response) => {
   res.send('Stl Server is runner on port 5000');
 });

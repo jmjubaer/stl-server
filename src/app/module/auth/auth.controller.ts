@@ -17,10 +17,23 @@ const loginUser = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     message: 'User Login Successful',
-    data: { accessToken },
+    data: accessToken,
+  });
+});
+
+const getAccessToken = catchAsync(async (req, res) => {
+  const result = await authServices.getAccessTokenByRefreshToken(
+    req?.cookies?.refreshToken,
+  );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Create access token successful',
+    data: result,
   });
 });
 
 export const authControllers = {
   loginUser,
+  getAccessToken,
 };
