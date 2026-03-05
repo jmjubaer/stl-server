@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { sendResetMail } from '../../utils/sendResetMail';
@@ -76,6 +77,7 @@ const getAccessTokenByRefreshToken = async (token: string) => {
 
 const sendOtp = async (email: string) => {
   const user = await userModel.findOne({ email });
+
   if (!user) {
     throw new AppError(404, 'User not found');
   }
@@ -86,9 +88,8 @@ const sendOtp = async (email: string) => {
 
   // Todo: Check password change time
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
   const resetPasswordOtp = await bcrypt.hash(otp, 10);
-  const resetPasswordExpires = new Date(Date.now() + 10 * 60 * 1000);
+  const resetPasswordExpires = new Date(Date.now() + 5 * 60 * 1000);
 
   await sendResetMail(email, otp);
 
@@ -101,8 +102,46 @@ const sendOtp = async (email: string) => {
   );
 };
 
+const verifyOtpIntoServer = async (payload: { email: string; otp: number }) => {
+  const user = await userModel.findOne({ email: payload?.email });
+
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_IMPLEMENTED, 'User not found');
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'User does not exist');
+  }
+
+  if (!user?.resetPasswordOtp || !user?.resetPasswordExpires) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP not requested');
+  }
+
+  if (new Date() > user?.resetPasswordExpires) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is expired');
+  }
+
+  const isOtpValid = await bcrypt.compare(
+    String(payload?.otp),
+    user?.resetPasswordOtp,
+  );
+
+  if (!isOtpValid) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is incorrect');
+  }
+
+  await userModel.findOneAndUpdate(
+    { email: payload?.email },
+    {
+      resetPasswordOtp: null,
+      resetPasswordExpires: null,
+    },
+  );
+};
+
 export const authServices = {
-  loginUser,
-  getAccessTokenByRefreshToken,
   sendOtp,
+  loginUser,
+  verifyOtpIntoServer,
+  getAccessTokenByRefreshToken,
 };

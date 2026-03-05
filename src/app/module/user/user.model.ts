@@ -49,5 +49,14 @@ userSchema.post('save', async function (doc, next) {
   doc.password = '';
   next();
 });
+  // todo: findone hook for isdelete
+// Todo: complete this
+// userSchema.pre("findOneAndUpdate", async function (next) {
+//   const query = this.getQuery()
+//   const isUserExist = await userModel.findOne(query)
+//   if(isUserExist){
+//     throw new AppError()
+//   }
+// })
 
 export const userModel = model<TUser>('User', userSchema);

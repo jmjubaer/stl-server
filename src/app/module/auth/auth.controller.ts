@@ -44,8 +44,19 @@ const sendOtp = catchAsync(async (req, res) => {
   });
 });
 
+const verifyOtp = catchAsync(async (req, res) => {
+  await authServices.verifyOtpIntoServer(req?.body);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Otp verify successful',
+    data: {},
+  });
+});
+
 export const authControllers = {
   sendOtp,
+  verifyOtp,
   loginUser,
   getAccessToken,
 };

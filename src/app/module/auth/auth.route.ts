@@ -4,6 +4,7 @@ import { validateRequest } from '../../middleware/validateRequest';
 import {
   sendMailValidationSchema,
   userLoginValidationSchema,
+  verifyOtpValidationSchema,
 } from './auth.validation';
 
 const router = Router();
@@ -20,6 +21,12 @@ router.post(
   '/auth/send-otp',
   validateRequest(sendMailValidationSchema),
   authControllers.sendOtp,
+);
+
+router.post(
+  '/auth/verify-otp',
+  validateRequest(verifyOtpValidationSchema),
+  authControllers.verifyOtp,
 );
 
 export const authRoutes = router;
