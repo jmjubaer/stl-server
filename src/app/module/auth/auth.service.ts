@@ -92,7 +92,6 @@ const sendOtp = async (email: string) => {
   const resetPasswordExpires = new Date(Date.now() + 5 * 60 * 1000);
 
   await sendResetMail(email, otp);
-
   await userModel.findOneAndUpdate(
     { email },
     {
@@ -129,19 +128,51 @@ const verifyOtpIntoServer = async (payload: { email: string; otp: number }) => {
   if (!isOtpValid) {
     throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is incorrect');
   }
+};
 
-  await userModel.findOneAndUpdate(
-    { email: payload?.email },
-    {
-      resetPasswordOtp: null,
-      resetPasswordExpires: null,
-    },
+const changePasswordByOtp = async (payload: {
+  email: string;
+  otp: number;
+  newPassword: string;
+}) => {
+  const user = await userModel.findOne({ email: payload?.email });
+
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_IMPLEMENTED, 'User not found');
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'User does not exist');
+  }
+
+  if (!user?.resetPasswordOtp || !user?.resetPasswordExpires) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP not requested');
+  }
+
+  if (new Date() > user?.resetPasswordExpires) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is expired');
+  }
+
+  const isOtpValid = await bcrypt.compare(
+    String(payload?.otp),
+    user?.resetPasswordOtp,
   );
+
+  if (!isOtpValid) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is incorrect');
+  }
+
+  user.resetPasswordOtp = null;
+  user.resetPasswordExpires = null;
+  user.password = payload?.newPassword;
+
+  await user.save();
 };
 
 export const authServices = {
   sendOtp,
   loginUser,
   verifyOtpIntoServer,
+  changePasswordByOtp,
   getAccessTokenByRefreshToken,
 };

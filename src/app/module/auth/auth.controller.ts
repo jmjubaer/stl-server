@@ -54,9 +54,20 @@ const verifyOtp = catchAsync(async (req, res) => {
   });
 });
 
+const changePassword = catchAsync(async (req, res) => {
+  await authServices.changePasswordByOtp(req?.body);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Password change successful',
+    data: {},
+  });
+});
+
 export const authControllers = {
   sendOtp,
   verifyOtp,
   loginUser,
+  changePassword,
   getAccessToken,
 };

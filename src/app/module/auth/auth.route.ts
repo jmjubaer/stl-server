@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authControllers } from './auth.controller';
 import { validateRequest } from '../../middleware/validateRequest';
 import {
+  changePasswordValidationSchema,
   sendMailValidationSchema,
   userLoginValidationSchema,
   verifyOtpValidationSchema,
@@ -27,6 +28,12 @@ router.post(
   '/auth/verify-otp',
   validateRequest(verifyOtpValidationSchema),
   authControllers.verifyOtp,
+);
+
+router.post(
+  '/auth/change-password',
+  validateRequest(changePasswordValidationSchema),
+  authControllers.changePassword,
 );
 
 export const authRoutes = router;

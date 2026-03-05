@@ -4,6 +4,6 @@ export type TUser = {
   email: string;
   password: string;
   isDeleted: boolean;
-  resetPasswordOtp: string;
-  resetPasswordExpires: Date;
+  resetPasswordOtp: string | null;
+  resetPasswordExpires: Date | null;
 };
