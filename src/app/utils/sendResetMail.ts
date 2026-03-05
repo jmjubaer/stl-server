@@ -4,23 +4,22 @@ export const sendResetMail = async (email: string, otp: string) => {
   // Create a transporter using Ethereal test credentials.
   // For production, replace with your actual SMTP server details.
   const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false, // Use true for port 465, false for port 587
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true for port 465, false for other ports
     auth: {
       user: config.nodemailer_user_email,
       pass: config.nodemailer_user_pass,
     },
   });
 
-  // Send an email using async/await
-  (async () => {
-    const info = await transporter.sendMail({
-      from: '"STL (Save The  Link)" <stl@gmail.com>',
-      to: email,
-      subject: 'Reset Your Password - OTP Verification',
-      html: `
-  <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:40px;">
+  await transporter.sendMail({
+    from: '"STL (Save The  Link)" <stl@gmail.com>', // sender address
+    to: email, // list of receivers
+    subject: 'Reset Your Password - OTP Verification', // Subject line
+    text: 'Reset Your Password - OTP Verification', // plain text body
+    html: `
+        <div style="font-family: Arial, sans-serif; background:#f4f6f8; padding:40px;">
     <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:8px;">
       
       <h2 style="color:#333;">Reset Your Password</h2>
@@ -60,9 +59,6 @@ export const sendResetMail = async (email: string, otp: string) => {
 
     </div>
   </div>
-`, // HTML version of the message
-    });
-
-    console.log('Message sent:', info.messageId);
-  })();
+      `, // html body
+  });
 };

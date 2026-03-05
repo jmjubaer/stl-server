@@ -34,7 +34,18 @@ const getAccessToken = catchAsync(async (req, res) => {
   });
 });
 
+const sendOtp = catchAsync(async (req, res) => {
+  await authServices.sendOtp(req?.body?.email);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Otp send successful',
+    data: {},
+  });
+});
+
 export const authControllers = {
+  sendOtp,
   loginUser,
   getAccessToken,
 };

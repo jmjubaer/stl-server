@@ -11,3 +11,11 @@ export const userLoginValidationSchema = z.object({
       .min(6, { message: 'Password must be at least 6 characters long' }),
   }),
 });
+
+export const sendMailValidationSchema = z.object({
+  body: z.object({
+    email: z
+      .email({ message: 'Invalid email format' })
+      .min(1, 'Email is required'),
+  }),
+});

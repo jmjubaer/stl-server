@@ -25,7 +25,12 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
-    
+    resetPasswordOtp: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
