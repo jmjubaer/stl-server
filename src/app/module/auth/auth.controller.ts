@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendSeponse';
 import { authServices } from './auth.service';
@@ -14,7 +15,7 @@ const loginUser = catchAsync(async (req, res) => {
   });
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     success: true,
     message: 'User Login Successful',
     data: accessToken,
@@ -26,7 +27,7 @@ const getAccessToken = catchAsync(async (req, res) => {
     req?.cookies?.refreshToken,
   );
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: StatusCodes.OK,
     success: true,
     message: 'Create access token successful',
     data: result,

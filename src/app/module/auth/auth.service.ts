@@ -48,7 +48,6 @@ const loginUser = async (payload: TLogin) => {
 };
 
 const getAccessTokenByRefreshToken = async (token: string) => {
-    console.log(token);
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const user = await userModel.findById(decoded?.id);
@@ -73,7 +72,21 @@ const getAccessTokenByRefreshToken = async (token: string) => {
   return accessToken;
 };
 
+const resetPassword = async (email: string) => {
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    throw new AppError(404, 'User not found');
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(401, 'User does not exist');
+  }
+//   Todo: check password change time
+  
+};
+
 export const authServices = {
   loginUser,
   getAccessTokenByRefreshToken,
+  resetPassword,
 };
