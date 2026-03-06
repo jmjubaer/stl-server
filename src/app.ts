@@ -5,6 +5,7 @@ import { notFound } from './app/middleware/notFound';
 import { userRoutes } from './app/module/user/user.routes';
 import { authRoutes } from './app/module/auth/auth.route';
 import cookieParser from 'cookie-parser';
+import { folderRoutes } from './app/module/folder/folder.route';
 const app: Application = express();
 
 app.use(cors());
@@ -16,6 +17,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/v1', userRoutes);
 app.use('/api/v1', authRoutes);
+app.use('/api/v1', folderRoutes);
 
 
 
