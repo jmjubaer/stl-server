@@ -1,7 +1,10 @@
-import { model, Schema } from 'mongoose';
+/* eslint-disable no-unused-vars */
+import { Model, model, Query, Schema } from 'mongoose';
 import { TUser } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
+import AppError from '../../errors/AppError';
+import { StatusCodes } from 'http-status-codes';
 const userSchema = new Schema<TUser>(
   {
     name: {
@@ -38,25 +41,39 @@ const userSchema = new Schema<TUser>(
 );
 
 userSchema.pre('save', async function () {
-  const user = this as TUser;
-  user.password = await bcrypt.hash(
-    user?.password,
-    Number(config?.bcrypt_salt_round),
-  );
+  if (this?.isDeleted) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'User does not exist');
+  }
+
+  if (this.isModified('password') && this.password) {
+    this.password = await bcrypt.hash(
+      this?.password,
+      Number(config?.bcrypt_salt_round),
+    );
+  }
 });
 
-userSchema.post('save', async function (doc, next) {
+userSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
-  // todo: findone hook for isdelete
-// Todo: complete this
-// userSchema.pre("findOneAndUpdate", async function (next) {
-//   const query = this.getQuery()
-//   const isUserExist = await userModel.findOne(query)
-//   if(isUserExist){
-//     throw new AppError()
-//   }
-// })
+
+// Exclude deleted user from find query
+userSchema.pre(/^find/, function (this: Query<unknown, TUser>) {
+  this.where({ isDeleted: { $ne: true } });
+});
+
+// Check if user is deleted before update and delete
+userSchema.pre(/^findOneAnd/, async function (this: Query<unknown, TUser>) {
+  const model = this.model as Model<TUser>;
+  const user = await model.findOne(this.getQuery() as Record<string, unknown>);
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, 'User does not exist');
+  }
+});
 
 export const userModel = model<TUser>('User', userSchema);
