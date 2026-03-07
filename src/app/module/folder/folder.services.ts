@@ -1,4 +1,5 @@
 import AppError from '../../errors/AppError';
+import { userModel } from '../user/user.model';
 import { TFolder } from './folder.interface';
 import { folderModel } from './folder.model';
 
@@ -10,7 +11,8 @@ const createFolderIntoDb = async (payload: TFolder) => {
   if (isFolderExist) {
     throw new AppError(400, 'Folder already exists');
   }
-  const isUserExist = await folderModel.findOne({ userId: payload.userId });
+  
+  const isUserExist = await userModel.findById(payload?.userId);
   if (!isUserExist) {
     throw new AppError(404, 'User not found');
   }
