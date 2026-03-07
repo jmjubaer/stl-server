@@ -10,6 +10,10 @@ const createFolderIntoDb = async (payload: TFolder) => {
   if (isFolderExist) {
     throw new AppError(400, 'Folder already exists');
   }
+  const isUserExist = await folderModel.findOne({ userId: payload.userId });
+  if (!isUserExist) {
+    throw new AppError(404, 'User not found');
+  }
   const result = await folderModel.create({
     ...payload,
     name: payload.name.toLowerCase(),

@@ -1,13 +1,17 @@
 import { model, Schema } from 'mongoose';
-import { TFolder } from './folder.interface';
+import { TTag } from './tag.interface';
 
-const folderSchema = new Schema<TFolder>({
+const tagSchema = new Schema<TTag>({
   name: {
     type: String,
     required: true,
     trim: true,
-    toLowerCase: true,
     unique: true,
+  },
+  color: {
+    type: String,
+    required: true,
+    trim: true,
   },
   userId: {
     type: Schema.Types.ObjectId,
@@ -16,4 +20,4 @@ const folderSchema = new Schema<TFolder>({
   },
 });
 
-export const folderModel = model<TFolder>('Folder', folderSchema);
+export const tagModel = model<TTag>('Tag', tagSchema);
