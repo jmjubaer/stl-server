@@ -6,6 +6,7 @@ const folderSchema = new Schema<TFolder>({
     type: String,
     required: true,
     trim: true,
+    toLowerCase: true,
   },
   userId: {
     type: Schema.Types.ObjectId,
