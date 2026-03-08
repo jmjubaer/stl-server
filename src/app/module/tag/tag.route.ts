@@ -13,4 +13,9 @@ router.post(
   tagControllers.createTag,
 );
 
+router.get(
+  '/tag/get-tags',
+  tagControllers.getUserTags,
+);
+
 export const tagRoutes = router;

@@ -1,6 +1,6 @@
-import { TUser } from "../user/user.interface";
+import { Types } from 'mongoose';
 
 export type TFolder = {
   name: string;
-  userId: TUser;
+  userId: Types.ObjectId;
 };

@@ -1,7 +1,7 @@
-import { TUser } from "../user/user.interface";
+import { Types } from 'mongoose';
 
 export type TTag = {
   name: string;
   color: string;
-  userId: TUser;
+  userId: Types.ObjectId;
 };

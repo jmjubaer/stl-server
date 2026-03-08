@@ -12,7 +12,17 @@ const createTag = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getUserTags = catchAsync(async (req, res) => {
+  const result = await tagServices.getTagFormDb(req.body.userId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Tags retrieved successful',
+    data: result,
+  });
+});
 
 export const tagControllers = {
   createTag,
+  getUserTags,
 };

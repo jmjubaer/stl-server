@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
 import { TFolder } from './folder.interface';
@@ -6,12 +7,12 @@ import { folderModel } from './folder.model';
 const createFolderIntoDb = async (payload: TFolder) => {
   const isFolderExist = await folderModel.findOne({
     name: payload.name.toLowerCase(),
-    userId: payload.userId,
+    userId: new Types.ObjectId(payload.userId),
   });
   if (isFolderExist) {
     throw new AppError(400, 'Folder already exists');
   }
-  
+
   const isUserExist = await userModel.findById(payload?.userId);
   if (!isUserExist) {
     throw new AppError(404, 'User not found');

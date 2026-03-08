@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
 import { TTag } from './tag.interface';
@@ -22,6 +23,12 @@ const createTagIntoDB = async (payload: TTag) => {
   return tag;
 };
 
+const getTagFormDb = async (userId: string) => {
+  const result = await tagModel.find({ userId: new Types.ObjectId(userId)});
+  return result;
+};
+
 export const tagServices = {
   createTagIntoDB,
+  getTagFormDb,
 };
