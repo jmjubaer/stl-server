@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
 import { TTag } from './tag.interface';
 import { tagModel } from './tag.mode';
+import { StatusCodes } from 'http-status-codes';
 
 const createTagIntoDB = async (payload: TTag) => {
   const isTagExist = await tagModel.findOne({
@@ -23,12 +24,23 @@ const createTagIntoDB = async (payload: TTag) => {
   return tag;
 };
 
-const getTagFormDb = async (userId: string) => {
-  const result = await tagModel.find({ userId: new Types.ObjectId(userId)});
+const getUserTagFormDb = async (userId: string) => {
+  const result = await tagModel.find({ userId: new Types.ObjectId(userId) });
+  return result;
+};
+
+const deleteUserTagFormDb = async (tagId: string) => {
+  const result = await tagModel.findByIdAndDelete(tagId);
+
+  if(!result){
+     throw new AppError(StatusCodes.NOT_FOUND, "Tags not fond")
+  }
+
   return result;
 };
 
 export const tagServices = {
   createTagIntoDB,
-  getTagFormDb,
+  getUserTagFormDb,
+  deleteUserTagFormDb,
 };

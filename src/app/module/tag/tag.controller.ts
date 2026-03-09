@@ -13,7 +13,9 @@ const createTag = catchAsync(async (req, res) => {
   });
 });
 const getUserTags = catchAsync(async (req, res) => {
-  const result = await tagServices.getTagFormDb(req.body.userId);
+  const result = await tagServices.getUserTagFormDb(
+    req.params.userId as string,
+  );
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -22,7 +24,18 @@ const getUserTags = catchAsync(async (req, res) => {
   });
 });
 
+const deleteTags = catchAsync(async (req, res) => {
+  const result = await tagServices.deleteUserTagFormDb(req.params.id as string);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Tags deleted successful',
+    data: result,
+  });
+});
+
 export const tagControllers = {
   createTag,
   getUserTags,
+  deleteTags,
 };

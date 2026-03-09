@@ -13,9 +13,8 @@ router.post(
   tagControllers.createTag,
 );
 
-router.get(
-  '/tag/get-tags',
-  tagControllers.getUserTags,
-);
+router.get('/tag/user-tags/:userId', tagControllers.getUserTags);
+
+router.delete('/tag/:id', auth(), tagControllers.deleteTags);
 
 export const tagRoutes = router;
