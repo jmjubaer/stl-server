@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export type TBookmark = {
   url: string;
   domain?: string;
@@ -7,7 +9,7 @@ export type TBookmark = {
   favicon?: string;
   siteName?: string;
   previewStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
-//   tags: TTag[];
+  tags: Types.ObjectId[];
 
   // optional
   isFavorite: boolean;
