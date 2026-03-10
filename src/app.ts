@@ -7,6 +7,7 @@ import { authRoutes } from './app/module/auth/auth.route';
 import cookieParser from 'cookie-parser';
 import { folderRoutes } from './app/module/folder/folder.route';
 import { tagRoutes } from './app/module/tag/tag.route';
+import { bookmarkRoutes } from './app/module/bookmark/bookmark.route';
 const app: Application = express();
 
 app.use(cors());
@@ -20,6 +21,7 @@ app.use('/api/v1', userRoutes);
 app.use('/api/v1', authRoutes);
 app.use('/api/v1', folderRoutes);
 app.use('/api/v1', tagRoutes);
+app.use('/api/v1', bookmarkRoutes);
 
 
 
