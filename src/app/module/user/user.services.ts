@@ -1,3 +1,4 @@
+import { tagModel } from '../tag/tag.mode';
 import { TUser } from './user.interface';
 import { userModel } from './user.model';
 
@@ -8,7 +9,8 @@ const createUserIntoDb = async (payload: TUser) => {
 
 const getMeFromDb = async (id: string) => {
   const result = await userModel.findById(id);
-  return result;
+  const useTag = await tagModel.find({ userId: id });
+  return { userInfo: result, useTag };
 };
 
 const updateMeIntoDb = async (id: string, payload: Partial<TUser>) => {
