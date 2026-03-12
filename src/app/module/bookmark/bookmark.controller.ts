@@ -25,7 +25,19 @@ const createBookmark = catchAsync(async (req, res) => {
   });
 });
 
+const getUserBookmark = catchAsync(async (req, res) => {
+  const result = await bookmarkServices.getUserBookmarkFromDb(req.user.id);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Bookmark retrieved successful',
+    data: result,
+  });
+});
+
 export const bookmarkControllers = {
   getLinkPreview,
   createBookmark,
+  getUserBookmark,
 };

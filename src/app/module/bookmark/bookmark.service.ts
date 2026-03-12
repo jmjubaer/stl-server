@@ -74,7 +74,27 @@ const createBookmarkIntoDb = async (payload: TBookmark) => {
   return result;
 };
 
+const getUserBookmarkFromDb = async (userId: string) => {
+  const result = await bookmarkModel
+    .find({ user: userId })
+    .populate('tags', 'name color')
+    .populate('folder', 'name');
+
+  const bookmarkWithFolder = result.filter((b) => b.folder);
+  const bookmarkWithoutFolder = result.filter((b) => !b.folder);
+  const folder = await folderModel.find({ userId });
+
+  const folderWithBookmark = folder.map((folder) => ({
+    ...folder.toObject(),
+    bookmark: bookmarkWithFolder.filter(
+      (b) => b?.folder?._id.toString() === folder?._id?.toString(),
+    ),
+  }));
+
+  return { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
+};
 export const bookmarkServices = {
+  getUserBookmarkFromDb,
   createBookmarkIntoDb,
   getLinkInfo,
 };

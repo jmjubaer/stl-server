@@ -10,7 +10,6 @@ const bookmarkSchema = new Schema<TBookmark>({
   url: {
     type: String,
     required: true,
-    unique: true,
   },
   image: String,
   description: String,
