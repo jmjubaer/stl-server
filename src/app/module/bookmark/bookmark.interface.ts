@@ -9,7 +9,10 @@ export type TBookmark = {
   favicon?: string;
   siteName?: string;
   previewStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
-  tags: Types.ObjectId[];
+
+  tags?: Types.ObjectId[];
+  folder?: Types.ObjectId;
+  user: Types.ObjectId;
 
   // optional
   isFavorite: boolean;

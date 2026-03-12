@@ -25,13 +25,22 @@ const bookmarkSchema = new Schema<TBookmark>({
     type: String,
     enum: ['PENDING', 'SUCCESS', 'FAILED'],
   },
+  folder: {
+    type: Schema.Types.ObjectId,
+    ref: 'Folder',
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
   isFavorite: {
     type: Boolean,
     default: false,
   },
   isPublic: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   lastVisitedAt: Date,
   visitCount: {

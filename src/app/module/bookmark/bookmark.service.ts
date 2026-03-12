@@ -1,5 +1,10 @@
 import { getLinkPreview } from 'link-preview-js';
 import AppError from '../../errors/AppError';
+import { bookmarkModel } from './bookmark.model';
+import { TBookmark } from './bookmark.interface';
+import { userModel } from '../user/user.model';
+import { folderModel } from '../folder/folder.model';
+import { tagModel } from '../tag/tag.mode';
 
 const getLinkInfo = async (url: string) => {
   try {
@@ -34,6 +39,42 @@ const getLinkInfo = async (url: string) => {
   }
 };
 
+const createBookmarkIntoDb = async (payload: TBookmark) => {
+  const isUserExist = await userModel.findById(payload.user);
+  if (!isUserExist) {
+    throw new AppError(404, 'User not found');
+  }
+
+  if (payload?.folder) {
+    const isFolderExist = await folderModel.findOne({
+      _id: payload.folder,
+      userId: payload.user,
+    });
+    if (!isFolderExist) {
+      throw new AppError(404, 'Folder not found');
+    }
+  }
+
+  if (payload?.tags && payload?.tags?.length > 0) {
+    const existingTags = await tagModel.find({
+      _id: { $in: payload.tags },
+      userId: payload.user,
+    });
+
+    if (existingTags?.length !== payload?.tags?.length) {
+      const foundedTag = existingTags.map((tag) => tag.name).join(', ');
+      throw new AppError(
+        404,
+        `Some tag are not found. Founded tags: [${foundedTag}]`,
+      );
+    }
+  }
+
+  const result = await bookmarkModel.create(payload);
+  return result;
+};
+
 export const bookmarkServices = {
+  createBookmarkIntoDb,
   getLinkInfo,
 };
