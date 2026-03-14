@@ -1,8 +1,11 @@
-import { Types } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+import mongoose, { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
 import { TFolder } from './folder.interface';
 import { folderModel } from './folder.model';
+import { bookmarkModel } from '../bookmark/bookmark.model';
 
 const createFolderIntoDb = async (payload: TFolder) => {
   const isFolderExist = await folderModel.findOne({
@@ -24,41 +27,63 @@ const createFolderIntoDb = async (payload: TFolder) => {
   return result;
 };
 
-const renameFolderIntoDb = async (payload: { id: string; newName: string }) => {
-  const isFolderExist = await folderModel.findById(payload.id);
+const renameFolderIntoDb = async (
+  id: string,
+  newName: string,
+  userId: string,
+) => {
+  const isFolderExist = await folderModel.findOne({ _id: id, userId: userId });
   if (!isFolderExist) {
     throw new AppError(404, 'Folder not found');
   }
 
-  if (isFolderExist.name.toLowerCase() === payload.newName.toLowerCase()) {
+  if (isFolderExist.name.toLowerCase() === newName.toLowerCase()) {
     throw new AppError(404, 'New name is same as old name');
   }
 
   const result = await folderModel.findByIdAndUpdate(
-    payload.id,
-    { name: payload.newName.toLowerCase() },
+    id,
+    { name: newName.toLowerCase() },
     { new: true },
   );
   return result;
 };
 
 // Todo: after bookmark api
-// const deleteFolderIntoDb = async (id: string) => {
-//   const isFolderExist = await folderModel.findById(id);
-//   if (!isFolderExist) {
-//     throw new AppError(404, 'Folder not found');
-//   }
-//   const session = await mongoose.startSession();
-//   try {
-//     session.startTransaction();
+const deleteFolderIntoDb = async (id: string, userId: string) => {
+  const isFolderExist = await folderModel.findOne({ _id: id, userId });
+  if (!isFolderExist) {
+    throw new AppError(404, 'Folder not found');
+  }
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-//     const result = await folderModel.findByIdAndDelete(id);
-//     const deleteFolderId = await
-//     return result;
-//   } catch (error) {}
-// };
+    const result = await folderModel.findByIdAndDelete(id, { session });
+
+    await bookmarkModel.updateMany(
+      {
+        folder: id,
+      },
+      {
+        $unset: { folder: '' },
+      },
+      {
+        session,
+      },
+    );
+    await session.commitTransaction();
+    return result;
+  } catch (error) {
+    await session.abortTransaction();
+    throw new AppError(500, 'Failed to delete folder');
+  } finally {
+    session.endSession();
+  }
+};
 
 export const folderServices = {
   createFolderIntoDb,
   renameFolderIntoDb,
+  deleteFolderIntoDb,
 };

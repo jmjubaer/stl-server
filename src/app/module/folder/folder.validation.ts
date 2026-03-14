@@ -9,7 +9,6 @@ export const createFolderValidationSchema = z.object({
 
 export const renameFolderValidationSchema = z.object({
   body: z.object({
-    id: z.string().nonempty({ message: 'Folder ID is required' }),
     newName: z.string().nonempty({ message: 'New name is required' }),
   }),
 });

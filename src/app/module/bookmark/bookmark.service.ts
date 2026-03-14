@@ -93,8 +93,55 @@ const getUserBookmarkFromDb = async (userId: string) => {
 
   return { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
 };
+
+// todo: complete the rename api
+const updateUserBookmarkFromDb = async (
+  payload: Partial<TBookmark>,
+  bookmarkId: string,
+  userId: string,
+) => {
+  const isBookmarkExist = await bookmarkModel.findById(bookmarkId);
+  if (!isBookmarkExist) {
+    throw new AppError(404, 'Bookmark not found');
+  }
+
+  if (payload?.folder) {
+    const isFolderExist = await folderModel.findOne({
+      _id: payload.folder,
+      userId: payload.user,
+    });
+    if (!isFolderExist) {
+      throw new AppError(404, 'Folder not found');
+    }
+  }
+
+  if (payload?.tags && payload?.tags?.length > 0) {
+    const existingTags = await tagModel.find({
+      _id: { $in: payload.tags },
+      userId: payload.user,
+    });
+
+    if (existingTags?.length !== payload?.tags?.length) {
+      const foundedTag = existingTags.map((tag) => tag.name).join(', ');
+      throw new AppError(
+        404,
+        `Some tag are not found. Founded tags: [${foundedTag}]`,
+      );
+    }
+  }
+
+  const result = await bookmarkModel.create(payload);
+  return result;
+};
+
+const deleteBookmarkFromDb = async (bookmarkId: string) => {
+  const result = await bookmarkModel.findByIdAndDelete(bookmarkId);
+  return result;
+};
 export const bookmarkServices = {
+  updateUserBookmarkFromDb,
   getUserBookmarkFromDb,
   createBookmarkIntoDb,
+  deleteBookmarkFromDb,
   getLinkInfo,
 };

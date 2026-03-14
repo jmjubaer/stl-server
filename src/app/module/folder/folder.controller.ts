@@ -14,15 +14,32 @@ const createFolder = catchAsync(async (req, res) => {
 });
 
 const renameFolder = catchAsync(async (req, res) => {
-  const result = await folderServices.renameFolderIntoDb(req.body)
-  sendResponse(res,{
+  const result = await folderServices.renameFolderIntoDb(
+    req.params.id as string,
+    req.body.newName,
+    req.user.id,
+  );
+  sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Rename folder successful",
-    data: result
-  })
+    message: 'Rename folder successful',
+    data: result,
+  });
+});
+const deleteFolder = catchAsync(async (req, res) => {
+  const result = await folderServices.deleteFolderIntoDb(
+    req.params.id as string,
+    req.user.id
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Deleted folder successful',
+    data: result,
+  });
 });
 export const folderControllers = {
   createFolder,
   renameFolder,
+  deleteFolder,
 };
