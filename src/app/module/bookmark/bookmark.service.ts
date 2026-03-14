@@ -96,11 +96,14 @@ const getUserBookmarkFromDb = async (userId: string) => {
 
 // todo: complete the rename api
 const updateUserBookmarkFromDb = async (
-  payload: Partial<TBookmark>,
   bookmarkId: string,
   userId: string,
+  payload: Partial<TBookmark>,
 ) => {
-  const isBookmarkExist = await bookmarkModel.findById(bookmarkId);
+  const isBookmarkExist = await bookmarkModel.findOne({
+    _id: bookmarkId,
+    user: userId,
+  });
   if (!isBookmarkExist) {
     throw new AppError(404, 'Bookmark not found');
   }
@@ -108,10 +111,10 @@ const updateUserBookmarkFromDb = async (
   if (payload?.folder) {
     const isFolderExist = await folderModel.findOne({
       _id: payload.folder,
-      userId: payload.user,
+      userId,
     });
     if (!isFolderExist) {
-      throw new AppError(404, 'Folder not found');
+      throw new AppError(404, 'Selected folder not found');
     }
   }
 
@@ -129,8 +132,14 @@ const updateUserBookmarkFromDb = async (
       );
     }
   }
+  delete payload.user;
+  delete payload.isFavorite;
+  delete payload.visitCount;
+  delete payload.lastVisitedAt;
+  delete payload.isPublic;
+  delete payload.previewStatus;
 
-  const result = await bookmarkModel.create(payload);
+  const result = await bookmarkModel.findByIdAndUpdate(bookmarkId, payload);
   return result;
 };
 

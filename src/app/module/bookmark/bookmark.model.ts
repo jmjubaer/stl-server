@@ -12,6 +12,7 @@ const bookmarkSchema = new Schema<TBookmark>({
     required: true,
   },
   image: String,
+  notes: String,
   description: String,
   domain: String,
   favicon: String,

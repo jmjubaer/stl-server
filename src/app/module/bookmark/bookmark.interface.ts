@@ -4,6 +4,7 @@ export type TBookmark = {
   url: string;
   domain?: string;
   title: string;
+  notes?: string;
   description?: string;
   image?: string;
   favicon?: string;
