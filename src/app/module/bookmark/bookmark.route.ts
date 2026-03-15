@@ -31,7 +31,7 @@ router.patch(
   bookmarkControllers.addToFolder,
 );
 router.patch(
-  '/bookmark/visited-at/:id',
+  '/bookmark/visitedAt/:id',
   auth(),
   bookmarkControllers.updateVisitedCount,
 );
