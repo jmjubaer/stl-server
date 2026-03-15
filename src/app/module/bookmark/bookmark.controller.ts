@@ -77,6 +77,19 @@ const addToFolder = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateVisitedCount = catchAsync(async (req, res) => {
+  const result = await bookmarkServices.updateVisitCountIntoDb(
+    req.params.id as string,
+    req.user.id,
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Update visited  at  successful',
+    data: result,
+  });
+});
 
 export const bookmarkControllers = {
   getLinkPreview,
@@ -85,4 +98,5 @@ export const bookmarkControllers = {
   deleteBookmark,
   updateBookmark,
   addToFolder,
+  updateVisitedCount,
 };

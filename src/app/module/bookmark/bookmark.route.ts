@@ -30,5 +30,10 @@ router.patch(
   validateRequest(addToFolderValidationSchema),
   bookmarkControllers.addToFolder,
 );
+router.patch(
+  '/bookmark/visited-at/:id',
+  auth(),
+  bookmarkControllers.updateVisitedCount,
+);
 
 export const bookmarkRoutes = router;

@@ -202,6 +202,22 @@ const addToFolderIntoDb = async (
   return result;
 };
 
+const updateVisitCountIntoDb = async (bookmarkId: string, userId: string) => {
+  const isBookmarkExist = await bookmarkModel.findOne({
+    _id: bookmarkId,
+    user: userId,
+  });
+  if (!isBookmarkExist) {
+    throw new AppError(404, 'Bookmark not found');
+  }
+
+  isBookmarkExist.visitCount += 1;
+  isBookmarkExist.lastVisitedAt = new Date();
+
+  const result = await isBookmarkExist.save();
+  return result;
+};
+
 export const bookmarkServices = {
   updateUserBookmarkFromDb,
   getUserBookmarkFromDb,
@@ -209,4 +225,5 @@ export const bookmarkServices = {
   deleteBookmarkFromDb,
   getLinkInfo,
   addToFolderIntoDb,
+  updateVisitCountIntoDb,
 };
