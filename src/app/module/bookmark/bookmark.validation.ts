@@ -30,3 +30,10 @@ export const updateBookmarkValidationSchema = z.object({
     folder: z.string().optional(),
   }),
 });
+
+export const addToFolderValidationSchema = z.object({
+  body: z.object({
+    bookmarkIds: z.array(z.string()).nonempty(),
+    folderId: z.string().nonempty(),
+  }),
+});

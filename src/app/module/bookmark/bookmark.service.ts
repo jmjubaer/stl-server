@@ -132,6 +132,7 @@ const updateUserBookmarkFromDb = async (
       );
     }
   }
+  // remove the restricted field
   delete payload.user;
   delete payload.isFavorite;
   delete payload.visitCount;
@@ -143,14 +144,69 @@ const updateUserBookmarkFromDb = async (
   return result;
 };
 
-const deleteBookmarkFromDb = async (bookmarkId: string) => {
-  const result = await bookmarkModel.findByIdAndDelete(bookmarkId);
+const deleteBookmarkFromDb = async (bookmarkId: string, userId: string) => {
+  const isBookmarkExist = await bookmarkModel.findOne({
+    _id: bookmarkId,
+    user: userId,
+  });
+  if (!isBookmarkExist) {
+    throw new AppError(404, 'Bookmark not found');
+  }
+  const result = await bookmarkModel.findOneAndDelete({
+    _id: bookmarkId,
+    user: userId,
+  });
   return result;
 };
+
+const addToFolderIntoDb = async (
+  userId: string,
+  payload: { bookmarkIds: string[]; folderId: string },
+) => {
+  if (!payload.bookmarkIds || payload.bookmarkIds.length === 0) {
+    throw new AppError(400, 'No bookmark IDs provided');
+  }
+
+  const isBookmarkExist = await bookmarkModel.find({
+    _id: { $in: payload.bookmarkIds },
+    user: userId,
+  });
+
+  if (isBookmarkExist.length < 1) {
+    throw new AppError(404, 'Bookmark not found');
+  }
+
+  const isFolderExist = await folderModel.findById(payload.folderId);
+  if (!isFolderExist) {
+    throw new AppError(404, 'Folder not found');
+  }
+
+  if (isBookmarkExist.length !== payload.bookmarkIds.length) {
+    const foundedIds = isBookmarkExist.map((b) => b._id.toString());
+    const notFoundIds = payload.bookmarkIds.filter(
+      (b) => !foundedIds.includes(b),
+    );
+    throw new AppError(
+      404,
+      `Some bookmark are not found. Not founded bookmark id: [${notFoundIds}]`,
+    );
+  }
+  const result = await bookmarkModel.updateMany(
+    {
+      _id: { $in: payload.bookmarkIds },
+      user: userId,
+    },
+    { $set: { folder: payload.folderId } },
+    { runValidators: true },
+  );
+  return result;
+};
+
 export const bookmarkServices = {
   updateUserBookmarkFromDb,
   getUserBookmarkFromDb,
   createBookmarkIntoDb,
   deleteBookmarkFromDb,
   getLinkInfo,
+  addToFolderIntoDb,
 };

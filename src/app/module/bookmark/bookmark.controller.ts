@@ -54,12 +54,26 @@ const updateBookmark = catchAsync(async (req, res) => {
 const deleteBookmark = catchAsync(async (req, res) => {
   const result = await bookmarkServices.deleteBookmarkFromDb(
     req.params.id as string,
+    req.user.id,
   );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Bookmark deleted successful',
+    data: result,
+  });
+});
+const addToFolder = catchAsync(async (req, res) => {
+  const result = await bookmarkServices.addToFolderIntoDb(
+    req.user.id,
+    req.body,
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Add Bookmark into folder successful',
     data: result,
   });
 });
@@ -70,4 +84,5 @@ export const bookmarkControllers = {
   getUserBookmark,
   deleteBookmark,
   updateBookmark,
+  addToFolder,
 };

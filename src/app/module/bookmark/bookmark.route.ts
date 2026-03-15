@@ -2,7 +2,11 @@ import { Router } from 'express';
 import { bookmarkControllers } from './bookmark.controller';
 import { auth } from '../../middleware/auth';
 import { validateRequest } from '../../middleware/validateRequest';
-import { createBookmarkValidationSchema, updateBookmarkValidationSchema } from './bookmark.validation';
+import {
+  addToFolderValidationSchema,
+  createBookmarkValidationSchema,
+  updateBookmarkValidationSchema,
+} from './bookmark.validation';
 
 const router = Router();
 router.get('/bookmark/link-preview', bookmarkControllers.getLinkPreview);
@@ -20,5 +24,11 @@ router.put(
   bookmarkControllers.updateBookmark,
 );
 router.delete('/bookmark/:id', auth(), bookmarkControllers.deleteBookmark);
+router.patch(
+  '/bookmark/add-to-folder',
+  auth(),
+  validateRequest(addToFolderValidationSchema),
+  bookmarkControllers.addToFolder,
+);
 
 export const bookmarkRoutes = router;
