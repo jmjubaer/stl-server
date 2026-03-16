@@ -11,27 +11,27 @@ import {
 const router = Router();
 
 router.post(
-  '/auth/login',
+  '/login',
   validateRequest(userLoginValidationSchema),
   authControllers.loginUser,
 );
 
-router.post('/auth/access-token', authControllers.getAccessToken);
+router.post('/access-token', authControllers.getAccessToken);
 
 router.post(
-  '/auth/send-otp',
+  '/send-otp',
   validateRequest(sendMailValidationSchema),
   authControllers.sendOtp,
 );
 
 router.post(
-  '/auth/verify-otp',
+  '/verify-otp',
   validateRequest(verifyOtpValidationSchema),
   authControllers.verifyOtp,
 );
 
 router.post(
-  '/auth/change-password',
+  '/change-password',
   validateRequest(changePasswordValidationSchema),
   authControllers.changePassword,
 );
