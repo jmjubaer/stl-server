@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.bookmarkRoutes = void 0;
+const express_1 = require("express");
+const bookmark_controller_1 = require("./bookmark.controller");
+const auth_1 = require("../../middleware/auth");
+const validateRequest_1 = require("../../middleware/validateRequest");
+const bookmark_validation_1 = require("./bookmark.validation");
+const router = (0, express_1.Router)();
+router.get('/bookmark/link-preview', bookmark_controller_1.bookmarkControllers.getLinkPreview);
+router.post('/bookmark/create', (0, auth_1.auth)(), (0, validateRequest_1.validateRequest)(bookmark_validation_1.createBookmarkValidationSchema), bookmark_controller_1.bookmarkControllers.createBookmark);
+router.get('/bookmark', (0, auth_1.auth)(), bookmark_controller_1.bookmarkControllers.getUserBookmark);
+router.put('/bookmark/:id', (0, auth_1.auth)(), (0, validateRequest_1.validateRequest)(bookmark_validation_1.updateBookmarkValidationSchema), bookmark_controller_1.bookmarkControllers.updateBookmark);
+router.delete('/bookmark/:id', (0, auth_1.auth)(), bookmark_controller_1.bookmarkControllers.deleteBookmark);
+router.patch('/bookmark/add-to-folder', (0, auth_1.auth)(), (0, validateRequest_1.validateRequest)(bookmark_validation_1.addToFolderValidationSchema), bookmark_controller_1.bookmarkControllers.addToFolder);
+router.patch('/bookmark/visitedAt/:id', (0, auth_1.auth)(), bookmark_controller_1.bookmarkControllers.updateVisitedCount);
+exports.bookmarkRoutes = router;

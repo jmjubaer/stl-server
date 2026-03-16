@@ -1,4 +1,4 @@
-import config from './app/config';
+import config from './config';
 import app from './app';
 import mongoose from 'mongoose';
 import { Server } from 'http';
