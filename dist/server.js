@@ -10,24 +10,60 @@ let server;
 const main = async () => {
     try {
         await mongoose_1.default.connect(config_1.default.database_url);
+        console.log('Database connected successfully');
         server = app_1.default.listen(config_1.default.port, () => {
-            console.log(`Example app listening on port ${config_1.default.port}`);
+            console.log(`Server is running on port ${config_1.default.port}`);
         });
     }
     catch (error) {
-        console.log(error);
+        console.error('Failed to connect to database:', error);
+        process.exit(1);
     }
 };
-main();
-process.on('unhandledRejection', () => {
+// my code ----------------
+// process.on('unhandledRejection', () => {
+//   if (server) {
+//     server.close(() => {
+//       console.log('Server closed due to unhandled rejection');
+//       process.exit(1);
+//     });
+//   }
+// });
+// process.on('uncaughtException', () => {
+//   console.log('Uncaught exception, shutting down the server');
+//   process.exit(1);
+// });
+// Claude recomendation
+// Graceful shutdown helper
+const gracefulShutdown = (reason, error) => {
+    console.error(`❌ ${reason}:`, error);
     if (server) {
         server.close(() => {
-            console.log('Server closed due to unhandled rejection');
-            process.exit(1);
+            console.log('🔴 Server closed gracefully');
+            mongoose_1.default.connection.close().then(() => {
+                console.log('🔴 Database connection closed');
+                process.exit(1);
+            });
         });
     }
+    else {
+        process.exit(1);
+    }
+};
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason) => {
+    gracefulShutdown('Unhandled Rejection', reason);
 });
-process.on('uncaughtException', () => {
-    console.log('Uncaught exception, shutting down the server');
-    process.exit(1);
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    gracefulShutdown('Uncaught Exception', error);
 });
+// Handle SIGTERM (Vercel, Docker, PM2 sends this on shutdown)
+process.on('SIGTERM', () => {
+    gracefulShutdown('SIGTERM received');
+});
+// Handle SIGINT (Ctrl+C in terminal)
+process.on('SIGINT', () => {
+    gracefulShutdown('SIGINT received');
+});
+main();
