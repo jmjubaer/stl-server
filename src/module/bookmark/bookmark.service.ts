@@ -74,6 +74,34 @@ const createBookmarkIntoDb = async (payload: TBookmark, userId: string) => {
   const result = await bookmarkModel.create({ ...payload, user: userId });
   return result;
 };
+const pinBookmarkIntoDb = async (bookmarkId: string, userId: string) => {
+  const isUserExist = await userModel.findById(userId);
+  if (!isUserExist) {
+    throw new AppError(404, 'User not found');
+  }
+
+  const isBookmarkExist = await bookmarkModel.findOne({
+    _id: bookmarkId,
+    user: userId,
+  });
+  console.log(bookmarkId);
+  if (!isBookmarkExist) {
+    throw new AppError(404, 'Bookmark not found');
+  }
+
+  const isPinned = !isBookmarkExist.isPinned;
+  const result = await bookmarkModel.findByIdAndUpdate(
+    bookmarkId,
+    {
+      isPinned,
+      pinnedAt: isPinned ? new Date() : null,
+    },
+    {
+      new: true,
+    },
+  );
+  return result;
+};
 
 const getUserBookmarkFromDb = async (
   userId: string,
@@ -189,7 +217,10 @@ const addToFolderIntoDb = async (
     throw new AppError(404, 'Bookmark not found');
   }
 
-  const isFolderExist = await folderModel.findById(payload.folderId);
+  const isFolderExist = await folderModel.findOne({
+    _id: payload.folderId,
+    userId: userId,
+  });
   if (!isFolderExist) {
     throw new AppError(404, 'Folder not found');
   }
@@ -239,4 +270,5 @@ export const bookmarkServices = {
   getLinkInfo,
   addToFolderIntoDb,
   updateVisitCountIntoDb,
+  pinBookmarkIntoDb,
 };

@@ -21,6 +21,14 @@ const bookmarkSchema = new Schema<TBookmark>({
     type: [Schema.Types.ObjectId],
     ref: 'Tag',
   },
+  isPinned: {
+    type: Boolean,
+    default: false,
+  },
+  pinnedAt: {
+    type: Date,
+    default: null,
+  },
   previewStatus: {
     type: String,
     enum: ['PENDING', 'SUCCESS', 'FAILED'],

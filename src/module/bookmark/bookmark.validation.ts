@@ -36,3 +36,4 @@ export const addToFolderValidationSchema = z.object({
     folderId: z.string().nonempty(),
   }),
 });
+

@@ -15,6 +15,8 @@ export type TBookmark = {
   folder?: Types.ObjectId;
   user: Types.ObjectId;
 
+  isPinned: boolean;
+  pinnedAt?: Date;
   // optional
   isFavorite: boolean;
   visitCount: number;

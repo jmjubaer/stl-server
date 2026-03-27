@@ -16,6 +16,7 @@ router.post(
   validateRequest(createBookmarkValidationSchema),
   bookmarkControllers.createBookmark,
 );
+router.post('/pin/:id', auth(), bookmarkControllers.pinBookmark);
 router.get('/', auth(), bookmarkControllers.getUserBookmark);
 router.put(
   '/:id',
@@ -30,10 +31,6 @@ router.patch(
   validateRequest(addToFolderValidationSchema),
   bookmarkControllers.addToFolder,
 );
-router.patch(
-  '/visitedAt/:id',
-  auth(),
-  bookmarkControllers.updateVisitedCount,
-);
+router.patch('/visitedAt/:id', auth(), bookmarkControllers.updateVisitedCount);
 
 export const bookmarkRoutes = router;

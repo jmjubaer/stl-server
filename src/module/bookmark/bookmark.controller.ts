@@ -15,12 +15,28 @@ const getLinkPreview = catchAsync(async (req, res) => {
   });
 });
 const createBookmark = catchAsync(async (req, res) => {
-  const result = await bookmarkServices.createBookmarkIntoDb(req.body,req.user.id);
+  const result = await bookmarkServices.createBookmarkIntoDb(
+    req.body,
+    req.user.id,
+  );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Bookmark created successful',
+    data: result,
+  });
+});
+const pinBookmark = catchAsync(async (req, res) => {
+  const result = await bookmarkServices.pinBookmarkIntoDb(
+    req.params.id as string,
+    req.user.id,
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Bookmark pin successful',
     data: result,
   });
 });
@@ -104,4 +120,5 @@ export const bookmarkControllers = {
   updateBookmark,
   addToFolder,
   updateVisitedCount,
+  pinBookmark,
 };
