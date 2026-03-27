@@ -5,6 +5,7 @@ import { TBookmark } from './bookmark.interface';
 import { userModel } from '../user/user.model';
 import { folderModel } from '../folder/folder.model';
 import { tagModel } from '../tag/tag.mode';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const getLinkInfo = async (url: string) => {
   try {
@@ -39,8 +40,8 @@ const getLinkInfo = async (url: string) => {
   }
 };
 
-const createBookmarkIntoDb = async (payload: TBookmark) => {
-  const isUserExist = await userModel.findById(payload.user);
+const createBookmarkIntoDb = async (payload: TBookmark, userId: string) => {
+  const isUserExist = await userModel.findById(userId);
   if (!isUserExist) {
     throw new AppError(404, 'User not found');
   }
@@ -70,16 +71,28 @@ const createBookmarkIntoDb = async (payload: TBookmark) => {
     }
   }
 
-  const result = await bookmarkModel.create(payload);
+  const result = await bookmarkModel.create({ ...payload, user: userId });
   return result;
 };
 
-const getUserBookmarkFromDb = async (userId: string) => {
-  const result = await bookmarkModel
-    .find({ user: userId })
-    .populate('tags', 'name color')
-    .populate('folder', 'name');
-
+const getUserBookmarkFromDb = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const bookmarkQuery = new QueryBuilder(
+    bookmarkModel
+      .find({ user: userId })
+      .populate('tags', 'name color')
+      .populate('folder', 'name'),
+    query,
+  )
+    .search(['url', 'domain', 'title', 'notes', 'description', 'siteName'])
+    .sort()
+    .filter()
+    .fields()
+    .paginate();
+  const result = await bookmarkQuery.queryModel;
+  const meta = await bookmarkQuery.countTotal();
   const bookmarkWithFolder = result.filter((b) => b.folder);
   const bookmarkWithoutFolder = result.filter((b) => !b.folder);
   const folder = await folderModel.find({ userId });
@@ -90,8 +103,8 @@ const getUserBookmarkFromDb = async (userId: string) => {
       (b) => b?.folder?._id.toString() === folder?._id?.toString(),
     ),
   }));
-
-  return { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
+  const data = { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
+  return { data, meta };
 };
 
 // todo: complete the rename api

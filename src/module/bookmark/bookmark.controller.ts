@@ -15,7 +15,7 @@ const getLinkPreview = catchAsync(async (req, res) => {
   });
 });
 const createBookmark = catchAsync(async (req, res) => {
-  const result = await bookmarkServices.createBookmarkIntoDb(req.body);
+  const result = await bookmarkServices.createBookmarkIntoDb(req.body,req.user.id);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -26,13 +26,17 @@ const createBookmark = catchAsync(async (req, res) => {
 });
 
 const getUserBookmark = catchAsync(async (req, res) => {
-  const result = await bookmarkServices.getUserBookmarkFromDb(req.user.id);
+  const result = await bookmarkServices.getUserBookmarkFromDb(
+    req.user.id,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Bookmark retrieved successful',
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
 
@@ -77,6 +81,7 @@ const addToFolder = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 const updateVisitedCount = catchAsync(async (req, res) => {
   const result = await bookmarkServices.updateVisitCountIntoDb(
     req.params.id as string,

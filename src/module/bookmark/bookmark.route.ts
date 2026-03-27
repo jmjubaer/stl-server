@@ -9,29 +9,29 @@ import {
 } from './bookmark.validation';
 
 const router = Router();
-router.get('/bookmark/link-preview', bookmarkControllers.getLinkPreview);
+router.get('/link-preview', bookmarkControllers.getLinkPreview);
 router.post(
-  '/bookmark/create',
+  '/create',
   auth(),
   validateRequest(createBookmarkValidationSchema),
   bookmarkControllers.createBookmark,
 );
-router.get('/bookmark', auth(), bookmarkControllers.getUserBookmark);
+router.get('/', auth(), bookmarkControllers.getUserBookmark);
 router.put(
-  '/bookmark/:id',
+  '/:id',
   auth(),
   validateRequest(updateBookmarkValidationSchema),
   bookmarkControllers.updateBookmark,
 );
-router.delete('/bookmark/:id', auth(), bookmarkControllers.deleteBookmark);
+router.delete('/:id', auth(), bookmarkControllers.deleteBookmark);
 router.patch(
-  '/bookmark/add-to-folder',
+  '/add-to-folder',
   auth(),
   validateRequest(addToFolderValidationSchema),
   bookmarkControllers.addToFolder,
 );
 router.patch(
-  '/bookmark/visitedAt/:id',
+  '/visitedAt/:id',
   auth(),
   bookmarkControllers.updateVisitedCount,
 );

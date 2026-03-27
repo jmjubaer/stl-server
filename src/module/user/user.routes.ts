@@ -10,14 +10,14 @@ import { auth } from '../../middleware/auth';
 const router = Router();
 
 router.post(
-  '/user/create',
+  '/create',
   validateRequest(createUserValidationSchema),
   userControllers.createUser,
 );
 
-router.get('/user/me', auth(), userControllers.getMe);
+router.get('/me', auth(), userControllers.getMe);
 router.patch(
-  '/user/me/update',
+  '/me/update',
   auth(),
   validateRequest(updateUserValidationSchema),
   userControllers.updateMe,
