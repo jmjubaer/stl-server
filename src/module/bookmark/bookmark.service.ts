@@ -84,7 +84,6 @@ const pinBookmarkIntoDb = async (bookmarkId: string, userId: string) => {
     _id: bookmarkId,
     user: userId,
   });
-  console.log(bookmarkId);
   if (!isBookmarkExist) {
     throw new AppError(404, 'Bookmark not found');
   }
@@ -117,10 +116,9 @@ const getUserBookmarkFromDb = async (
     .search(['url', 'domain', 'title', 'notes', 'description', 'siteName'])
     .sort()
     .filter()
-    .fields()
-    .paginate();
+    .fields();
   const result = await bookmarkQuery.queryModel;
-  const meta = await bookmarkQuery.countTotal();
+  // const meta = await bookmarkQuery.countTotal();
   const bookmarkWithFolder = result.filter((b) => b.folder);
   const bookmarkWithoutFolder = result.filter((b) => !b.folder);
   const folder = await folderModel.find({ userId });
@@ -131,8 +129,16 @@ const getUserBookmarkFromDb = async (
       (b) => b?.folder?._id.toString() === folder?._id?.toString(),
     ),
   }));
-  const data = { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
-  return { data, meta };
+  const pinnedBookmark = await bookmarkModel
+    .find({ user: userId, isPinned: true })
+    .sort({ pinnedAt: -1 })
+    .populate('tags', 'name color')
+    .populate('folder', 'name');
+  return {
+    pinnedBookmark,
+    folder: folderWithBookmark,
+    bookmark: bookmarkWithoutFolder,
+  };
 };
 
 // todo: complete the rename api

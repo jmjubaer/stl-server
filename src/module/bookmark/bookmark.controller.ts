@@ -51,8 +51,7 @@ const getUserBookmark = catchAsync(async (req, res) => {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Bookmark retrieved successful',
-    data: result.data,
-    meta: result.meta,
+    data: result,
   });
 });
 
