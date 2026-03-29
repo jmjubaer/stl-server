@@ -22,6 +22,14 @@ const bookmarkSchema = new mongoose_1.Schema({
         type: [mongoose_1.Schema.Types.ObjectId],
         ref: 'Tag',
     },
+    isPinned: {
+        type: Boolean,
+        default: false,
+    },
+    pinnedAt: {
+        type: Date,
+        default: null,
+    },
     previewStatus: {
         type: String,
         enum: ['PENDING', 'SUCCESS', 'FAILED'],

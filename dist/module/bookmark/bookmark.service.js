@@ -10,6 +10,7 @@ const bookmark_model_1 = require("./bookmark.model");
 const user_model_1 = require("../user/user.model");
 const folder_model_1 = require("../folder/folder.model");
 const tag_mode_1 = require("../tag/tag.mode");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const getLinkInfo = async (url) => {
     try {
         if (!url) {
@@ -42,8 +43,8 @@ const getLinkInfo = async (url) => {
         }
     }
 };
-const createBookmarkIntoDb = async (payload) => {
-    const isUserExist = await user_model_1.userModel.findById(payload.user);
+const createBookmarkIntoDb = async (payload, userId) => {
+    const isUserExist = await user_model_1.userModel.findById(userId);
     if (!isUserExist) {
         throw new AppError_1.default(404, 'User not found');
     }
@@ -66,14 +67,41 @@ const createBookmarkIntoDb = async (payload) => {
             throw new AppError_1.default(404, `Some tag are not found. Founded tags: [${foundedTag}]`);
         }
     }
-    const result = await bookmark_model_1.bookmarkModel.create(payload);
+    const result = await bookmark_model_1.bookmarkModel.create({ ...payload, user: userId });
     return result;
 };
-const getUserBookmarkFromDb = async (userId) => {
-    const result = await bookmark_model_1.bookmarkModel
+const pinBookmarkIntoDb = async (bookmarkId, userId) => {
+    const isUserExist = await user_model_1.userModel.findById(userId);
+    if (!isUserExist) {
+        throw new AppError_1.default(404, 'User not found');
+    }
+    const isBookmarkExist = await bookmark_model_1.bookmarkModel.findOne({
+        _id: bookmarkId,
+        user: userId,
+    });
+    if (!isBookmarkExist) {
+        throw new AppError_1.default(404, 'Bookmark not found');
+    }
+    const isPinned = !isBookmarkExist.isPinned;
+    const result = await bookmark_model_1.bookmarkModel.findByIdAndUpdate(bookmarkId, {
+        isPinned,
+        pinnedAt: isPinned ? new Date() : null,
+    }, {
+        new: true,
+    });
+    return result;
+};
+const getUserBookmarkFromDb = async (userId, query) => {
+    const bookmarkQuery = new QueryBuilder_1.default(bookmark_model_1.bookmarkModel
         .find({ user: userId })
         .populate('tags', 'name color')
-        .populate('folder', 'name');
+        .populate('folder', 'name'), query)
+        .search(['url', 'domain', 'title', 'notes', 'description', 'siteName'])
+        .sort()
+        .filter()
+        .fields();
+    const result = await bookmarkQuery.queryModel;
+    // const meta = await bookmarkQuery.countTotal();
     const bookmarkWithFolder = result.filter((b) => b.folder);
     const bookmarkWithoutFolder = result.filter((b) => !b.folder);
     const folder = await folder_model_1.folderModel.find({ userId });
@@ -81,7 +109,16 @@ const getUserBookmarkFromDb = async (userId) => {
         ...folder.toObject(),
         bookmark: bookmarkWithFolder.filter((b) => b?.folder?._id.toString() === folder?._id?.toString()),
     }));
-    return { folder: folderWithBookmark, bookmark: bookmarkWithoutFolder };
+    const pinnedBookmark = await bookmark_model_1.bookmarkModel
+        .find({ user: userId, isPinned: true })
+        .sort({ pinnedAt: -1 })
+        .populate('tags', 'name color')
+        .populate('folder', 'name');
+    return {
+        pinnedBookmark,
+        folder: folderWithBookmark,
+        bookmark: bookmarkWithoutFolder,
+    };
 };
 // todo: complete the rename api
 const updateUserBookmarkFromDb = async (bookmarkId, userId, payload) => {
@@ -146,7 +183,10 @@ const addToFolderIntoDb = async (userId, payload) => {
     if (isBookmarkExist.length < 1) {
         throw new AppError_1.default(404, 'Bookmark not found');
     }
-    const isFolderExist = await folder_model_1.folderModel.findById(payload.folderId);
+    const isFolderExist = await folder_model_1.folderModel.findOne({
+        _id: payload.folderId,
+        userId: userId,
+    });
     if (!isFolderExist) {
         throw new AppError_1.default(404, 'Folder not found');
     }
@@ -182,4 +222,5 @@ exports.bookmarkServices = {
     getLinkInfo,
     addToFolderIntoDb,
     updateVisitCountIntoDb,
+    pinBookmarkIntoDb,
 };

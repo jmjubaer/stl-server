@@ -9,15 +9,14 @@ exports.createBookmarkValidationSchema = zod_1.default.object({
     body: zod_1.default.object({
         title: zod_1.default.string().nonempty('Title is required'),
         url: zod_1.default.string().nonempty('Url is required'),
-        user: zod_1.default.string().nonempty('User is required'),
         domain: zod_1.default.string().optional(),
         description: zod_1.default.string().optional(),
         notes: zod_1.default.string().optional(),
         image: zod_1.default.string().optional(),
         favicon: zod_1.default.string().optional(),
         siteName: zod_1.default.string().optional(),
-        tags: zod_1.default.array(zod_1.default.string()),
-        folder: zod_1.default.string(),
+        tags: zod_1.default.array(zod_1.default.string()).optional(),
+        folder: zod_1.default.string().optional(),
     }),
 });
 exports.updateBookmarkValidationSchema = zod_1.default.object({

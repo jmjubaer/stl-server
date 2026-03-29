@@ -1,10 +1,31 @@
+import { Types } from 'mongoose';
+import config from '../../config';
+import { createToken } from '../auth/auth.utils';
 import { tagModel } from '../tag/tag.mode';
 import { TUser } from './user.interface';
 import { userModel } from './user.model';
 
 const createUserIntoDb = async (payload: TUser) => {
-  const result = await userModel.create(payload);
-  return result;
+  const user = await userModel.create(payload);
+  const jwtPayload = {
+    id: user?._id,
+    email: user?.email,
+  };
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '7d',
+  );
+
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    '30d',
+  );
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 const getMeFromDb = async (id: string) => {

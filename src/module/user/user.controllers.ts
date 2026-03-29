@@ -6,11 +6,18 @@ import sendResponse from '../../utils/sendSeponse';
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const result = await userServices.createUserIntoDb(data);
+  const { accessToken, refreshToken } = result;
+  res.cookie('refreshToken', refreshToken, {
+    secure: false,
+    httpOnly: true,
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 60 * 24 * 365,
+  });
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'User created successfully',
-    data: result,
+    data: accessToken,
   });
 });
 const getMe = catchAsync(async (req, res) => {
