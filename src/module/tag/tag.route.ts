@@ -7,14 +7,14 @@ import { createTagValidationSchema } from './tag.validation';
 const router = Router();
 
 router.post(
-  '/tag/create',
+  '/create',
   auth(),
   validateRequest(createTagValidationSchema),
   tagControllers.createTag,
 );
 
-router.get('/tag/user-tags/:userId', tagControllers.getUserTags);
+router.get('/user-tags/:userId', tagControllers.getUserTags);
 
-router.delete('/tag/:id', auth(), tagControllers.deleteTags);
+router.delete('/:id', auth(), tagControllers.deleteTags);
 
 export const tagRoutes = router;

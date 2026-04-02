@@ -1,14 +1,13 @@
-import { Types } from 'mongoose';
 import config from '../../config';
 import { createToken } from '../auth/auth.utils';
 import { tagModel } from '../tag/tag.mode';
 import { TUser } from './user.interface';
 import { userModel } from './user.model';
-
+// todo: fix type issue
 const createUserIntoDb = async (payload: TUser) => {
-  const user = await userModel.create(payload);
+  const user = (await userModel.create(payload));
   const jwtPayload = {
-    id: user?._id,
+    id: user._id.toString(),
     email: user?.email,
   };
   const accessToken = createToken(

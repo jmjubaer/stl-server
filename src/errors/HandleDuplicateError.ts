@@ -4,7 +4,7 @@ import { TErrorSources, TGenericErrorResponse } from '../types/error';
 
 const handleDuplicateError = (error: any): TGenericErrorResponse => {
   const statusCode = 400;
-  const message = 'Duplicate property';
+  const message = 'User already exists';
   const match = error.message.match(/"([^"]*)"/);
   const extractedMessage = match && match[1];
   const errorSources: TErrorSources = [

@@ -5,21 +5,22 @@ import { TTag } from './tag.interface';
 import { tagModel } from './tag.mode';
 import { StatusCodes } from 'http-status-codes';
 
-const createTagIntoDB = async (payload: TTag) => {
+const createTagIntoDB = async (payload: TTag, userId: string) => {
   const isTagExist = await tagModel.findOne({
-    name: payload.name,
-    userId: payload.userId,
+    name: payload.name.toLowerCase(),
+    userId,
   });
   if (isTagExist) {
     throw new Error('Tag already exists');
   }
-  const isUserExist = await userModel.findById(payload.userId);
+  const isUserExist = await userModel.findById(userId);
   if (!isUserExist) {
     throw new AppError(404, 'User not found');
   }
   const tag = await tagModel.create({
     ...payload,
     name: payload.name.toLowerCase(),
+    userId,
   });
   return tag;
 };

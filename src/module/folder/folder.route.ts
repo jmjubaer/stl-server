@@ -9,17 +9,17 @@ import { auth } from '../../middleware/auth';
 
 const router = Router();
 router.post(
-  '/folder/create',
+  '/create',
   auth(),
   validateRequest(createFolderValidationSchema),
   folderControllers.createFolder,
 );
 router.patch(
-  '/folder/:id',
+  '/:id',
   auth(),
   validateRequest(renameFolderValidationSchema),
   folderControllers.renameFolder,
 );
-router.delete('/folder/:id', auth(), folderControllers.deleteFolder);
+router.delete('/:id', auth(), folderControllers.deleteFolder);
 
 export const folderRoutes = router;

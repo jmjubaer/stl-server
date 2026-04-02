@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendSeponse';
 import { tagServices } from './tag.services';
 
 const createTag = catchAsync(async (req, res) => {
-  const result = await tagServices.createTagIntoDB(req.body);
+  const result = await tagServices.createTagIntoDB(req.body, req.user.id);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

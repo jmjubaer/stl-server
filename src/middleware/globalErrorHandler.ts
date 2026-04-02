@@ -11,7 +11,7 @@ export const globalErrorHandler = (
   error: any,
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction, 
 ) => {
   let statusCode = error.statusCode || 500;
   let message = error.message || 'Something went wrong';

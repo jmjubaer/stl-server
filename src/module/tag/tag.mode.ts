@@ -7,7 +7,6 @@ const tagSchema = new Schema<TTag>(
       type: String,
       required: true,
       trim: true,
-      unique: true,
       toLowerCase: true,
     },
     color: {
