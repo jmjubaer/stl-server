@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendSeponse';
 import { folderServices } from './folder.services';
 
 const createFolder = catchAsync(async (req, res) => {
-  const result = await folderServices.createFolderIntoDb(req.body);
+  const result = await folderServices.createFolderIntoDb(req.body, req.user.id);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

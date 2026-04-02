@@ -7,22 +7,23 @@ import { TFolder } from './folder.interface';
 import { folderModel } from './folder.model';
 import { bookmarkModel } from '../bookmark/bookmark.model';
 
-const createFolderIntoDb = async (payload: TFolder) => {
+const createFolderIntoDb = async (payload: TFolder, userId: string) => {
   const isFolderExist = await folderModel.findOne({
     name: payload.name.toLowerCase(),
-    userId: new Types.ObjectId(payload.userId),
+    userId,
   });
   if (isFolderExist) {
     throw new AppError(400, 'Folder already exists');
   }
 
-  const isUserExist = await userModel.findById(payload?.userId);
+  const isUserExist = await userModel.findById(userId);
   if (!isUserExist) {
     throw new AppError(404, 'User not found');
   }
   const result = await folderModel.create({
     ...payload,
     name: payload.name.toLowerCase(),
+    userId,
   });
   return result;
 };

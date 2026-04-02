@@ -8,7 +8,6 @@ const folderSchema = new Schema<TFolder>(
       required: true,
       trim: true,
       toLowerCase: true,
-      unique: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
