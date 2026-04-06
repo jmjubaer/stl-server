@@ -49,7 +49,7 @@ const createBookmarkIntoDb = async (payload: TBookmark, userId: string) => {
   if (payload?.folder) {
     const isFolderExist = await folderModel.findOne({
       _id: payload.folder,
-      userId: payload.user,
+      userId,
     });
     if (!isFolderExist) {
       throw new AppError(404, 'Folder not found');
@@ -59,7 +59,7 @@ const createBookmarkIntoDb = async (payload: TBookmark, userId: string) => {
   if (payload?.tags && payload?.tags?.length > 0) {
     const existingTags = await tagModel.find({
       _id: { $in: payload.tags },
-      userId: payload.user,
+      userId,
     });
 
     if (existingTags?.length !== payload?.tags?.length) {
@@ -125,19 +125,19 @@ const getUserBookmarkFromDb = async (
 
   const folderWithBookmark = folder.map((folder) => ({
     ...folder.toObject(),
-    bookmark: bookmarkWithFolder.filter(
+    bookmarks: bookmarkWithFolder.filter(
       (b) => b?.folder?._id.toString() === folder?._id?.toString(),
     ),
   }));
-  const pinnedBookmark = await bookmarkModel
+  const pinnedBookmarks = await bookmarkModel
     .find({ user: userId, isPinned: true })
     .sort({ pinnedAt: -1 })
     .populate('tags', 'name color')
     .populate('folder', 'name');
   return {
-    pinnedBookmark,
-    folder: folderWithBookmark,
-    bookmark: bookmarkWithoutFolder,
+    pinnedBookmarks,
+    folders: folderWithBookmark,
+    bookmarks: bookmarkWithoutFolder,
   };
 };
 
