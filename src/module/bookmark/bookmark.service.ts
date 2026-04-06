@@ -105,7 +105,7 @@ const pinBookmarkIntoDb = async (bookmarkId: string, userId: string) => {
 const getUserBookmarkFromDb = async (
   userId: string,
   query: Record<string, unknown>,
-) => {
+) => {  
   const bookmarkQuery = new QueryBuilder(
     bookmarkModel
       .find({ user: userId })
