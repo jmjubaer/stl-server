@@ -4,7 +4,7 @@ import { bookmarkModel } from './bookmark.model';
 import { TBookmark } from './bookmark.interface';
 import { userModel } from '../user/user.model';
 import { folderModel } from '../folder/folder.model';
-import { tagModel } from '../tag/tag.mode';
+import { tagModel } from '../tag/tag.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 
 const getLinkInfo = async (url: string) => {
@@ -105,7 +105,7 @@ const pinBookmarkIntoDb = async (bookmarkId: string, userId: string) => {
 const getUserBookmarkFromDb = async (
   userId: string,
   query: Record<string, unknown>,
-) => {  
+) => {
   const bookmarkQuery = new QueryBuilder(
     bookmarkModel
       .find({ user: userId })
@@ -223,14 +223,6 @@ const addToFolderIntoDb = async (
     throw new AppError(404, 'Bookmark not found');
   }
 
-  const isFolderExist = await folderModel.findOne({
-    _id: payload.folderId,
-    userId: userId,
-  });
-  if (!isFolderExist) {
-    throw new AppError(404, 'Folder not found');
-  }
-
   if (isBookmarkExist.length !== payload.bookmarkIds.length) {
     const foundedIds = isBookmarkExist.map((b) => b._id.toString());
     const notFoundIds = payload.bookmarkIds.filter(
@@ -241,15 +233,36 @@ const addToFolderIntoDb = async (
       `Some bookmark are not found. Not founded bookmark id: [${notFoundIds}]`,
     );
   }
-  const result = await bookmarkModel.updateMany(
-    {
-      _id: { $in: payload.bookmarkIds },
-      user: userId,
-    },
-    { $set: { folder: payload.folderId } },
-    { runValidators: true },
-  );
-  return result;
+
+  if (payload.folderId === 'uncategorized') {
+    const result = await bookmarkModel.updateMany(
+      {
+        _id: { $in: payload.bookmarkIds },
+        user: userId,
+      },
+      { $set: { folder: null } },
+      { runValidators: true },
+    );
+    return result;
+  } else {
+    const isFolderExist = await folderModel.findOne({
+      _id: payload.folderId,
+      userId: userId,
+    });
+    if (!isFolderExist) {
+      throw new AppError(404, 'Folder not found');
+    }
+
+    const result = await bookmarkModel.updateMany(
+      {
+        _id: { $in: payload.bookmarkIds },
+        user: userId,
+      },
+      { $set: { folder: payload.folderId } },
+      { runValidators: true },
+    );
+    return result;
+  }
 };
 
 const updateVisitCountIntoDb = async (bookmarkId: string, userId: string) => {

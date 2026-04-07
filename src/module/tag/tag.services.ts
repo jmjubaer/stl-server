@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import { userModel } from '../user/user.model';
 import { TTag } from './tag.interface';
-import { tagModel } from './tag.mode';
+import { tagModel } from './tag.model';
 import { StatusCodes } from 'http-status-codes';
 
 const createTagIntoDB = async (payload: TTag, userId: string) => {

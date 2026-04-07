@@ -13,9 +13,7 @@ const createTag = catchAsync(async (req, res) => {
   });
 });
 const getUserTags = catchAsync(async (req, res) => {
-  const result = await tagServices.getUserTagFormDb(
-    req.params.userId as string,
-  );
+  const result = await tagServices.getUserTagFormDb(req.user.id as string);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

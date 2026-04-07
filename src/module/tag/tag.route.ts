@@ -13,7 +13,7 @@ router.post(
   tagControllers.createTag,
 );
 
-router.get('/user-tags/:userId', tagControllers.getUserTags);
+router.get('/', auth(), tagControllers.getUserTags);
 
 router.delete('/:id', auth(), tagControllers.deleteTags);
 
