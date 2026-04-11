@@ -100,8 +100,8 @@ const updateVisitedCount = catchAsync(async (req, res) => {
 
 const togglePinBookmark = catchAsync(async (req, res) => {
   const result = await bookmarkServices.togglePinBookmarkIntoDb(
-    req.params.id as string,
-    req.user.id,
+    req.body,
+    req.user.id
   );
 
   sendResponse(res, {

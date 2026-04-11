@@ -254,19 +254,26 @@ const updateVisitCountIntoDb = async (bookmarkId: string, userId: string) => {
   return result;
 };
 
-const togglePinBookmarkIntoDb = async (bookmarkId: string, userId: string) => {
-  const isBookmarkExist = await bookmarkModel.findOne({
-    _id: bookmarkId,
+const togglePinBookmarkIntoDb = async (
+  payload: { bookmarkIds: string[]; isPinned: boolean },
+  userId: string,
+) => {
+  const isBookmarkExist = await bookmarkModel.find({
+    _id: { $in: payload.bookmarkIds },
     user: userId,
   });
-  if (!isBookmarkExist) {
-    throw new AppError(404, 'Bookmark not found');
+  if (isBookmarkExist.length < payload.bookmarkIds.length) {
+    throw new AppError(404, 'Some Bookmark are not found');
   }
 
-  isBookmarkExist.isPinned = !isBookmarkExist.isPinned;
-  isBookmarkExist.pinnedAt = new Date();
-
-  const result = await isBookmarkExist.save();
+  const result = await bookmarkModel.updateMany(
+    {
+      _id: { $in: payload.bookmarkIds },
+      user: userId,
+    },
+    { $set: { isPinned: payload.isPinned, pinnedAt: new Date() } },
+    { runValidators: true },
+  );
   return result;
 };
 

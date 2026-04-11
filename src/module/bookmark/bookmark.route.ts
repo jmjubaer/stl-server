@@ -31,6 +31,6 @@ router.patch(
   bookmarkControllers.addToFolder,
 );
 router.patch('/visitedAt/:id', auth(), bookmarkControllers.updateVisitedCount);
-router.patch('/pin/:id', auth(), bookmarkControllers.togglePinBookmark);
+router.patch('/pin', auth(), bookmarkControllers.togglePinBookmark);
 
 export const bookmarkRoutes = router;
