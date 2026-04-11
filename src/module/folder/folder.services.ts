@@ -7,6 +7,14 @@ import { TFolder } from './folder.interface';
 import { folderModel } from './folder.model';
 import { bookmarkModel } from '../bookmark/bookmark.model';
 
+const getFolderFromDb = async (userId: string) => {
+  const isUserExist = await userModel.findById(userId);
+  if (!isUserExist) {
+    throw new AppError(404, 'User not found');
+  }
+  const result = await folderModel.find({ userId });
+  return result;
+};
 const createFolderIntoDb = async (payload: TFolder, userId: string) => {
   const isFolderExist = await folderModel.findOne({
     name: payload.name.toLowerCase(),
@@ -87,4 +95,5 @@ export const folderServices = {
   createFolderIntoDb,
   renameFolderIntoDb,
   deleteFolderIntoDb,
+  getFolderFromDb
 };

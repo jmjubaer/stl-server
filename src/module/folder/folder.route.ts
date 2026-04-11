@@ -8,6 +8,7 @@ import {
 import { auth } from '../../middleware/auth';
 
 const router = Router();
+router.get('/', auth(), folderControllers.getFolder);
 router.post(
   '/create',
   auth(),

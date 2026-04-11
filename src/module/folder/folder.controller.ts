@@ -3,6 +3,15 @@ import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendSeponse';
 import { folderServices } from './folder.services';
 
+const getFolder = catchAsync(async (req, res) => {
+  const result = await folderServices.getFolderFromDb(req.user.id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Folder retrieved successful',
+    data: result,
+  });
+});
 const createFolder = catchAsync(async (req, res) => {
   const result = await folderServices.createFolderIntoDb(req.body, req.user.id);
   sendResponse(res, {
@@ -42,4 +51,5 @@ export const folderControllers = {
   createFolder,
   renameFolder,
   deleteFolder,
+  getFolder
 };

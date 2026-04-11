@@ -9,15 +9,16 @@ export type TBookmark = {
   image?: string;
   favicon?: string;
   siteName?: string;
-  previewStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
-
+  
   tags?: Types.ObjectId[];
   folder?: Types.ObjectId;
   user: Types.ObjectId;
-
+  
   isPinned: boolean;
   pinnedAt?: Date;
+  
   // optional
+  previewStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
   isFavorite: boolean;
   visitCount: number;
   lastVisitedAt?: Date;
