@@ -27,19 +27,6 @@ const createBookmark = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const pinBookmark = catchAsync(async (req, res) => {
-  const result = await bookmarkServices.pinBookmarkIntoDb(
-    req.params.id as string,
-    req.user.id,
-  );
-
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: 'Bookmark pin successful',
-    data: result,
-  });
-});
 
 const getUserBookmark = catchAsync(async (req, res) => {
   const result = await bookmarkServices.getUserBookmarkFromDb(
@@ -111,6 +98,20 @@ const updateVisitedCount = catchAsync(async (req, res) => {
   });
 });
 
+const togglePinBookmark = catchAsync(async (req, res) => {
+  const result = await bookmarkServices.togglePinBookmarkIntoDb(
+    req.params.id as string,
+    req.user.id,
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Toggle pin bookmark successful',
+    data: result,
+  });
+});
+
 export const bookmarkControllers = {
   getLinkPreview,
   createBookmark,
@@ -119,5 +120,5 @@ export const bookmarkControllers = {
   updateBookmark,
   addToFolder,
   updateVisitedCount,
-  pinBookmark,
+  togglePinBookmark,
 };
