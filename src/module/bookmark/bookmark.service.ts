@@ -141,7 +141,7 @@ const updateUserBookmarkFromDb = async (
   if (payload?.tags && payload?.tags?.length > 0) {
     const existingTags = await tagModel.find({
       _id: { $in: payload.tags },
-      userId: payload.user,
+      userId,
     });
 
     if (existingTags?.length !== payload?.tags?.length) {

@@ -25,8 +25,8 @@ export const updateBookmarkValidationSchema = z.object({
     image: z.string().optional(),
     favicon: z.string().optional(),
     siteName: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    folder: z.string().optional(),
+    tags: z.array(z.string()).optional().nullable(),
+    folder: z.string().optional().nullable(),
   }),
 });
 
