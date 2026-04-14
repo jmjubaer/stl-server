@@ -47,9 +47,22 @@ const deleteFolder = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getShareFolder = catchAsync(async (req, res) => {
+  const result = await folderServices.getShareFolderFromDb(
+    req.params.id as string,
+  );
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Getting share folder successful',
+    data: result,
+  });
+});
 export const folderControllers = {
   createFolder,
   renameFolder,
   deleteFolder,
-  getFolder
+  getFolder,
+  getShareFolder,
 };

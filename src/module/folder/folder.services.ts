@@ -90,10 +90,17 @@ const deleteFolderIntoDb = async (id: string, userId: string) => {
     session.endSession();
   }
 };
-
+const getShareFolderFromDb = async (folderId: string) => {
+  const result = await bookmarkModel
+    .find({ folder: folderId })
+    .populate('tags', 'name color')
+    .populate('folder', 'name');
+  return result;
+};
 export const folderServices = {
   createFolderIntoDb,
   renameFolderIntoDb,
   deleteFolderIntoDb,
-  getFolderFromDb
+  getFolderFromDb,
+  getShareFolderFromDb,
 };

@@ -22,5 +22,6 @@ router.patch(
   folderControllers.renameFolder,
 );
 router.delete('/:id', auth(), folderControllers.deleteFolder);
+router.get('/share/:id', folderControllers.getShareFolder);
 
 export const folderRoutes = router;
