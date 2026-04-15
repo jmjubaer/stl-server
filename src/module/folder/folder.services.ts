@@ -94,7 +94,8 @@ const getShareFolderFromDb = async (folderId: string) => {
   const result = await bookmarkModel
     .find({ folder: folderId })
     .populate('tags', 'name color')
-    .populate('folder', 'name');
+    .populate('folder', 'name')
+    .populate('user', 'name');
   return result;
 };
 export const folderServices = {

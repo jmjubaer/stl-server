@@ -148,10 +148,10 @@ const changePasswordByOtp = async (payload: {
   if (!user?.resetPasswordOtp || !user?.resetPasswordExpires) {
     throw new AppError(StatusCodes.BAD_REQUEST, 'OTP not requested');
   }
-
-  if (new Date() > user?.resetPasswordExpires) {
-    throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is expired');
-  }
+  // already verify in last stage====================
+  // if (new Date() > user?.resetPasswordExpires) {
+  //   throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is expired');
+  // }
 
   const isOtpValid = await bcrypt.compare(
     String(payload?.otp),

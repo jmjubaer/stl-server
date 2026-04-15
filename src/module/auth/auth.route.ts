@@ -31,7 +31,7 @@ router.post(
 );
 
 router.post(
-  '/change-password',
+  '/reset-password',
   validateRequest(changePasswordValidationSchema),
   authControllers.changePassword,
 );
