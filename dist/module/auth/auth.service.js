@@ -30,8 +30,8 @@ const loginUser = async (payload) => {
         id: user?.id,
         email: user?.email,
     };
-    const accessToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '7d');
-    const refreshToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_refresh_secret, '30d');
+    const accessToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '30d');
+    const refreshToken = (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_refresh_secret, '90d');
     return {
         accessToken,
         refreshToken,
@@ -101,9 +101,10 @@ const changePasswordByOtp = async (payload) => {
     if (!user?.resetPasswordOtp || !user?.resetPasswordExpires) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'OTP not requested');
     }
-    if (new Date() > user?.resetPasswordExpires) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'OTP is expired');
-    }
+    // already verify in last stage====================
+    // if (new Date() > user?.resetPasswordExpires) {
+    //   throw new AppError(StatusCodes.BAD_REQUEST, 'OTP is expired');
+    // }
     const isOtpValid = await bcrypt_1.default.compare(String(payload?.otp), user?.resetPasswordOtp);
     if (!isOtpValid) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, 'OTP is incorrect');

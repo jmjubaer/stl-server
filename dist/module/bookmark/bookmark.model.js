@@ -56,5 +56,5 @@ const bookmarkSchema = new mongoose_1.Schema({
         type: Number,
         default: 0,
     },
-});
+}, { timestamps: true });
 exports.bookmarkModel = (0, mongoose_1.model)('bookmark', bookmarkSchema);

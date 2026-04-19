@@ -9,7 +9,7 @@ const catchAsync_1 = require("../../utils/catchAsync");
 const sendSeponse_1 = __importDefault(require("../../utils/sendSeponse"));
 const tag_services_1 = require("./tag.services");
 const createTag = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const result = await tag_services_1.tagServices.createTagIntoDB(req.body);
+    const result = await tag_services_1.tagServices.createTagIntoDB(req.body, req.user.id);
     (0, sendSeponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
@@ -18,7 +18,7 @@ const createTag = (0, catchAsync_1.catchAsync)(async (req, res) => {
     });
 });
 const getUserTags = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const result = await tag_services_1.tagServices.getUserTagFormDb(req.params.userId);
+    const result = await tag_services_1.tagServices.getUserTagFormDb(req.user.id);
     (0, sendSeponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,

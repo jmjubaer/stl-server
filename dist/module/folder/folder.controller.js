@@ -8,8 +8,17 @@ const http_status_codes_1 = require("http-status-codes");
 const catchAsync_1 = require("../../utils/catchAsync");
 const sendSeponse_1 = __importDefault(require("../../utils/sendSeponse"));
 const folder_services_1 = require("./folder.services");
+const getFolder = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await folder_services_1.folderServices.getFolderFromDb(req.user.id);
+    (0, sendSeponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: 'Folder retrieved successful',
+        data: result,
+    });
+});
 const createFolder = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const result = await folder_services_1.folderServices.createFolderIntoDb(req.body);
+    const result = await folder_services_1.folderServices.createFolderIntoDb(req.body, req.user.id);
     (0, sendSeponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
@@ -35,8 +44,19 @@ const deleteFolder = (0, catchAsync_1.catchAsync)(async (req, res) => {
         data: result,
     });
 });
+const getShareFolder = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await folder_services_1.folderServices.getShareFolderFromDb(req.params.id);
+    (0, sendSeponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: 'Getting share folder successful',
+        data: result,
+    });
+});
 exports.folderControllers = {
     createFolder,
     renameFolder,
     deleteFolder,
+    getFolder,
+    getShareFolder,
 };

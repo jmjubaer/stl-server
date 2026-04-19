@@ -20,6 +20,13 @@ class QueryBuilder {
         const queryObj = { ...this.query };
         const excludeField = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
         excludeField.forEach((elm) => delete queryObj[elm]);
+        // Handle tags filter separately — supports multiple tags
+        if (this.query.tags) {
+            const tags = Array.isArray(this.query.tags)
+                ? this.query.tags
+                : this.query.tags.split(',');
+            queryObj.tags = { $in: tags };
+        }
         this.queryModel = this.queryModel.find(queryObj);
         return this;
     }

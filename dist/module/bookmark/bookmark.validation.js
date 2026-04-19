@@ -15,8 +15,8 @@ exports.createBookmarkValidationSchema = zod_1.default.object({
         image: zod_1.default.string().optional(),
         favicon: zod_1.default.string().optional(),
         siteName: zod_1.default.string().optional(),
-        tags: zod_1.default.array(zod_1.default.string()).optional(),
-        folder: zod_1.default.string().optional(),
+        tags: zod_1.default.array(zod_1.default.string()).optional().nullable(),
+        folder: zod_1.default.string().optional().nullable(),
     }),
 });
 exports.updateBookmarkValidationSchema = zod_1.default.object({
@@ -29,8 +29,8 @@ exports.updateBookmarkValidationSchema = zod_1.default.object({
         image: zod_1.default.string().optional(),
         favicon: zod_1.default.string().optional(),
         siteName: zod_1.default.string().optional(),
-        tags: zod_1.default.array(zod_1.default.string()).optional(),
-        folder: zod_1.default.string().optional(),
+        tags: zod_1.default.array(zod_1.default.string()).optional().nullable(),
+        folder: zod_1.default.string().optional().nullable(),
     }),
 });
 exports.addToFolderValidationSchema = zod_1.default.object({

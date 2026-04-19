@@ -8,7 +8,6 @@ const zod_1 = __importDefault(require("zod"));
 exports.createFolderValidationSchema = zod_1.default.object({
     body: zod_1.default.object({
         name: zod_1.default.string().nonempty({ message: 'Folder name is required' }),
-        userId: zod_1.default.string().nonempty({ message: 'User ID is required' }),
     }),
 });
 exports.renameFolderValidationSchema = zod_1.default.object({

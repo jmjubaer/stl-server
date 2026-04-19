@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const handleDuplicateError = (error) => {
     const statusCode = 400;
-    const message = 'Duplicate property';
+    const message = 'User already exists';
     const match = error.message.match(/"([^"]*)"/);
     const extractedMessage = match && match[1];
     const errorSources = [

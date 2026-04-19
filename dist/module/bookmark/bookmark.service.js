@@ -9,7 +9,7 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const bookmark_model_1 = require("./bookmark.model");
 const user_model_1 = require("../user/user.model");
 const folder_model_1 = require("../folder/folder.model");
-const tag_mode_1 = require("../tag/tag.mode");
+const tag_model_1 = require("../tag/tag.model");
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const getLinkInfo = async (url) => {
     try {
@@ -51,16 +51,16 @@ const createBookmarkIntoDb = async (payload, userId) => {
     if (payload?.folder) {
         const isFolderExist = await folder_model_1.folderModel.findOne({
             _id: payload.folder,
-            userId: payload.user,
+            userId,
         });
         if (!isFolderExist) {
             throw new AppError_1.default(404, 'Folder not found');
         }
     }
     if (payload?.tags && payload?.tags?.length > 0) {
-        const existingTags = await tag_mode_1.tagModel.find({
+        const existingTags = await tag_model_1.tagModel.find({
             _id: { $in: payload.tags },
-            userId: payload.user,
+            userId,
         });
         if (existingTags?.length !== payload?.tags?.length) {
             const foundedTag = existingTags.map((tag) => tag.name).join(', ');
@@ -68,27 +68,6 @@ const createBookmarkIntoDb = async (payload, userId) => {
         }
     }
     const result = await bookmark_model_1.bookmarkModel.create({ ...payload, user: userId });
-    return result;
-};
-const pinBookmarkIntoDb = async (bookmarkId, userId) => {
-    const isUserExist = await user_model_1.userModel.findById(userId);
-    if (!isUserExist) {
-        throw new AppError_1.default(404, 'User not found');
-    }
-    const isBookmarkExist = await bookmark_model_1.bookmarkModel.findOne({
-        _id: bookmarkId,
-        user: userId,
-    });
-    if (!isBookmarkExist) {
-        throw new AppError_1.default(404, 'Bookmark not found');
-    }
-    const isPinned = !isBookmarkExist.isPinned;
-    const result = await bookmark_model_1.bookmarkModel.findByIdAndUpdate(bookmarkId, {
-        isPinned,
-        pinnedAt: isPinned ? new Date() : null,
-    }, {
-        new: true,
-    });
     return result;
 };
 const getUserBookmarkFromDb = async (userId, query) => {
@@ -107,17 +86,17 @@ const getUserBookmarkFromDb = async (userId, query) => {
     const folder = await folder_model_1.folderModel.find({ userId });
     const folderWithBookmark = folder.map((folder) => ({
         ...folder.toObject(),
-        bookmark: bookmarkWithFolder.filter((b) => b?.folder?._id.toString() === folder?._id?.toString()),
+        bookmarks: bookmarkWithFolder.filter((b) => b?.folder?._id.toString() === folder?._id?.toString()),
     }));
-    const pinnedBookmark = await bookmark_model_1.bookmarkModel
+    const pinnedBookmarks = await bookmark_model_1.bookmarkModel
         .find({ user: userId, isPinned: true })
         .sort({ pinnedAt: -1 })
         .populate('tags', 'name color')
         .populate('folder', 'name');
     return {
-        pinnedBookmark,
-        folder: folderWithBookmark,
-        bookmark: bookmarkWithoutFolder,
+        pinnedBookmarks,
+        folders: folderWithBookmark,
+        bookmarks: bookmarkWithoutFolder,
     };
 };
 // todo: complete the rename api
@@ -139,9 +118,9 @@ const updateUserBookmarkFromDb = async (bookmarkId, userId, payload) => {
         }
     }
     if (payload?.tags && payload?.tags?.length > 0) {
-        const existingTags = await tag_mode_1.tagModel.find({
+        const existingTags = await tag_model_1.tagModel.find({
             _id: { $in: payload.tags },
-            userId: payload.user,
+            userId,
         });
         if (existingTags?.length !== payload?.tags?.length) {
             const foundedTag = existingTags.map((tag) => tag.name).join(', ');
@@ -183,23 +162,32 @@ const addToFolderIntoDb = async (userId, payload) => {
     if (isBookmarkExist.length < 1) {
         throw new AppError_1.default(404, 'Bookmark not found');
     }
-    const isFolderExist = await folder_model_1.folderModel.findOne({
-        _id: payload.folderId,
-        userId: userId,
-    });
-    if (!isFolderExist) {
-        throw new AppError_1.default(404, 'Folder not found');
-    }
     if (isBookmarkExist.length !== payload.bookmarkIds.length) {
         const foundedIds = isBookmarkExist.map((b) => b._id.toString());
         const notFoundIds = payload.bookmarkIds.filter((b) => !foundedIds.includes(b));
         throw new AppError_1.default(404, `Some bookmark are not found. Not founded bookmark id: [${notFoundIds}]`);
     }
-    const result = await bookmark_model_1.bookmarkModel.updateMany({
-        _id: { $in: payload.bookmarkIds },
-        user: userId,
-    }, { $set: { folder: payload.folderId } }, { runValidators: true });
-    return result;
+    if (payload.folderId === 'uncategorized') {
+        const result = await bookmark_model_1.bookmarkModel.updateMany({
+            _id: { $in: payload.bookmarkIds },
+            user: userId,
+        }, { $set: { folder: null } }, { runValidators: true });
+        return result;
+    }
+    else {
+        const isFolderExist = await folder_model_1.folderModel.findOne({
+            _id: payload.folderId,
+            userId: userId,
+        });
+        if (!isFolderExist) {
+            throw new AppError_1.default(404, 'Folder not found');
+        }
+        const result = await bookmark_model_1.bookmarkModel.updateMany({
+            _id: { $in: payload.bookmarkIds },
+            user: userId,
+        }, { $set: { folder: payload.folderId } }, { runValidators: true });
+        return result;
+    }
 };
 const updateVisitCountIntoDb = async (bookmarkId, userId) => {
     const isBookmarkExist = await bookmark_model_1.bookmarkModel.findOne({
@@ -214,6 +202,20 @@ const updateVisitCountIntoDb = async (bookmarkId, userId) => {
     const result = await isBookmarkExist.save();
     return result;
 };
+const togglePinBookmarkIntoDb = async (payload, userId) => {
+    const isBookmarkExist = await bookmark_model_1.bookmarkModel.find({
+        _id: { $in: payload.bookmarkIds },
+        user: userId,
+    });
+    if (isBookmarkExist.length < payload.bookmarkIds.length) {
+        throw new AppError_1.default(404, 'Some Bookmark are not found');
+    }
+    const result = await bookmark_model_1.bookmarkModel.updateMany({
+        _id: { $in: payload.bookmarkIds },
+        user: userId,
+    }, { $set: { isPinned: payload.isPinned, pinnedAt: new Date() } }, { runValidators: true });
+    return result;
+};
 exports.bookmarkServices = {
     updateUserBookmarkFromDb,
     getUserBookmarkFromDb,
@@ -222,5 +224,5 @@ exports.bookmarkServices = {
     getLinkInfo,
     addToFolderIntoDb,
     updateVisitCountIntoDb,
-    pinBookmarkIntoDb,
+    togglePinBookmarkIntoDb,
 };

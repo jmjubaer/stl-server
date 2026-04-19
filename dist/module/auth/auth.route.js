@@ -10,5 +10,5 @@ router.post('/login', (0, validateRequest_1.validateRequest)(auth_validation_1.u
 router.post('/access-token', auth_controller_1.authControllers.getAccessToken);
 router.post('/send-otp', (0, validateRequest_1.validateRequest)(auth_validation_1.sendMailValidationSchema), auth_controller_1.authControllers.sendOtp);
 router.post('/verify-otp', (0, validateRequest_1.validateRequest)(auth_validation_1.verifyOtpValidationSchema), auth_controller_1.authControllers.verifyOtp);
-router.post('/change-password', (0, validateRequest_1.validateRequest)(auth_validation_1.changePasswordValidationSchema), auth_controller_1.authControllers.changePassword);
+router.post('/reset-password', (0, validateRequest_1.validateRequest)(auth_validation_1.changePasswordValidationSchema), auth_controller_1.authControllers.changePassword);
 exports.authRoutes = router;

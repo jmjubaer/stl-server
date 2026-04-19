@@ -9,6 +9,5 @@ exports.createTagValidationSchema = zod_1.default.object({
     body: zod_1.default.object({
         name: zod_1.default.string().nonempty({ message: 'Tag name is required' }),
         color: zod_1.default.string().nonempty({ message: 'Tag color is required' }),
-        userId: zod_1.default.string().nonempty({ message: 'User ID is required' }),
     }),
 });
