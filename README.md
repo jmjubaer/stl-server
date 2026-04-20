@@ -1,85 +1,72 @@
-# 📌 STL — Save The Link
+# 🖥️ STL Server — Save The Link Backend
 
-> A powerful bookmark manager to save, organize, and access your favorite links from anywhere.
-
-🌐 **Live Demo:** [https://save-the-link.vercel.app](https://save-the-link.vercel.app)
+> REST API server for the STL (Save The Link) bookmark manager application. Built with Node.js, Express, TypeScript, and MongoDB.
 
 ---
 
 ## 📖 Table of Contents
 
+- [Overview](#overview)
 - [Features](#features)
-- [Getting Started](#getting-started)
-- [How to Use](#how-to-use)
 - [Technology Stack](#technology-stack)
+- [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [Environment Variables](#environment-variables)
-- [API Documentation](#api-documentation)
-- [Contributing](#contributing)
+- [API Reference](#api-reference)
+- [Database Schema](#database-schema)
+- [Security](#security)
+- [Error Handling](#error-handling)
+- [Deployment](#deployment)
+
+---
+
+## 🌐 Overview
+
+The STL Server is a RESTful API that powers the Save The Link application. It handles user authentication, bookmark management, folder organization, tag management, and link preview fetching.
+
+**Base URL (Production):** `https://your-server.vercel.app/api/v1`
+
+**Base URL (Development):** `http://localhost:5000/api/v1`
 
 ---
 
 ## ✨ Features
 
-### 🔖 Bookmark Management
-- Save any URL as a bookmark with auto-fetched preview (title, image, favicon, description)
-- Edit, delete, and organize bookmarks
-- Add personal notes to any bookmark
-- Copy bookmark URL with one click
-- Track visit count and last visited time
+- ✅ JWT Authentication with Access & Refresh Tokens
+- ✅ Password hashing with Bcrypt
+- ✅ OTP-based password reset via Email
+- ✅ Bookmark CRUD with link preview metadata
+- ✅ Folder management with cascade delete
+- ✅ Tag management with color support
+- ✅ Advanced search, filter, sort & pagination via QueryBuilder
+- ✅ Pin/unpin bookmarks
+- ✅ Mongoose pre/post hooks for data integrity
+- ✅ Global error handling
+- ✅ Request validation with Zod
+- ✅ Rate limiting & security headers
+- ✅ Graceful server shutdown
 
-### 📁 Folder Organization
-- Create folders to organize bookmarks
-- Move bookmarks into folders
-- View all bookmarks inside a specific folder
-- Share folders with others via a generated link
+---
 
-### 📌 Pin Bookmarks
-- Pin important bookmarks to always show at the top
-- Toggle pin/unpin with one click
-- Pinned bookmarks appear separately for quick access
+## 🛠️ Technology Stack
 
-### ❤️ Favorites
-- Mark bookmarks as favorites
-- Filter to view only favorite bookmarks
-
-### 🏷️ Tag System
-- Create custom tags with colors
-- Assign up to 3 tags per bookmark
-- Filter bookmarks by multiple tags simultaneously
-
-### 🔍 Search & Filter
-- Search bookmarks by title, URL, description, site name, or tag name
-- Filter by folder, tag, or favorite status
-- Sort by Newest First, Oldest First, Recently Updated, Title A–Z, Title Z–A
-
-### 🔗 Link Preview
-- Automatically fetches metadata when you paste a URL
-- Shows title, cover image, favicon, site name, and description
-- Manual override available if auto-fetch fails
-
-### 🔐 Authentication
-- Register and login with email and password
-- JWT-based authentication with access and refresh tokens
-- Forgot password with OTP verification via email
-- Secure httpOnly cookie-based session management
-
-### 📤 Share
-- Share any bookmark or folder via:
-  - Facebook
-  - Twitter / X
-  - WhatsApp
-  - Telegram
-  - LinkedIn
-  - Gmail
-  - Copy link
-
-### 🎨 UI & UX
-- Responsive design for all screen sizes
-- Grid and list view toggle
-- Adjustable column layout (2, 3, or 4 columns)
-- Light mode interface
-- Smooth animations and transitions
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Node.js | 18+ | Runtime |
+| Express.js | 4+ | Web framework |
+| TypeScript | 5+ | Type safety |
+| MongoDB | 6+ | Database |
+| Mongoose | 8+ | ODM |
+| JWT | - | Authentication |
+| Bcrypt | - | Password hashing |
+| Nodemailer | - | Email sending (OTP) |
+| Zod | - | Request validation |
+| link-preview-js | - | URL metadata fetching |
+| Helmet | - | Security headers |
+| express-rate-limit | - | Rate limiting |
+| http-status-codes | - | HTTP status codes |
+| cookie-parser | - | Cookie parsing |
+| cors | - | Cross-origin requests |
 
 ---
 
@@ -88,252 +75,706 @@
 ### Prerequisites
 
 - Node.js 18+
-- MongoDB Atlas account
-- Gmail account (for sending OTP emails)
+- MongoDB Atlas account or local MongoDB
+- Gmail account with App Password enabled
 
 ### Installation
 
-**Clone the repositories:**
-
 ```bash
-# Frontend
-git clone https://github.com/yourusername/stl-client.git
-cd stl-client
-npm install
-
-# Backend
+# Clone the repository
 git clone https://github.com/yourusername/stl-server.git
 cd stl-server
+
+# Install dependencies
 npm install
+
+# Create environment file
+cp .env.example .env
+# Fill in your environment variables
+
+# Run in development
+npm run dev
+
+# Build for production
+npm run build
+
+# Run production build
+npm start
 ```
 
-**Set up environment variables** (see [Environment Variables](#environment-variables))
-
-**Run development servers:**
+### Scripts
 
 ```bash
-# Backend
-npm run dev
-
-# Frontend
-npm run dev
+npm run dev       # Start with ts-node-dev (hot reload)
+npm run build     # Compile TypeScript to dist/
+npm start         # Run compiled JS
+npm run lint      # Run ESLint
 ```
-
----
-
-## 📘 How to Use
-
-### 1. Create an Account
-- Click **Login / Register** in the navbar
-- Fill in your name, email, and password
-- Click **Register** to create your account
-
-### 2. Add a Bookmark
-- Click the **+ Add Bookmark** button
-- Paste any URL — preview loads automatically
-- Edit title, image, notes if needed
-- Select a folder and tags (optional)
-- Toggle **Pin** to pin it to the top
-- Click **Add Bookmark**
-
-### 3. Organize with Folders
-- Click **+ New Folder** in the sidebar
-- Give your folder a name
-- Move bookmarks into folders from the bookmark menu (⋮)
-- Click a folder to view only its bookmarks
-- Click **Home** to go back to all bookmarks
-
-### 4. Use Tags
-- Click the **Tags** button to open the tag filter
-- Select up to 3 tags to filter bookmarks
-- Click **+ Add Tag** inside the tag panel to create a new tag with a custom color
-- Selected tags appear as badges above the bookmark list
-
-### 5. Search & Sort
-- Type in the **Search** bar to search by title, URL, description, or tag name
-- Click **Sort** to change the sort order
-- Results update in real time
-
-### 6. Pin Bookmarks
-- Click the pin icon (📌) on any bookmark card
-- Pinned bookmarks appear at the top of your dashboard
-- Click again to unpin
-
-### 7. Share a Bookmark or Folder
-- Click the share icon on any bookmark or folder
-- Choose a platform: Facebook, WhatsApp, Telegram, Gmail, etc.
-- Or copy the link directly
-
-### 8. Reset Password
-- Click **Forgot Password** on the login form
-- Enter your registered email
-- Check your email for the 6-digit OTP
-- Enter the OTP and set a new password
-
----
-
-## 🛠️ Technology Stack
-
-### Frontend
-| Technology | Purpose |
-|------------|---------|
-| Next.js 15 | React framework with App Router |
-| TypeScript | Type safety |
-| Tailwind CSS | Styling |
-| Redux Toolkit | Global state management |
-| React Hook Form | Form handling |
-| Ant Design | UI components |
-| SweetAlert2 | Alert dialogs |
-| React Icons | Icon library |
-| JWT Decode | Token decoding |
-
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| Node.js | Runtime |
-| Express.js | Web framework |
-| TypeScript | Type safety |
-| MongoDB | Database |
-| Mongoose | ODM |
-| JWT | Authentication |
-| Bcrypt | Password hashing |
-| Nodemailer | Email sending |
-| Zod | Request validation |
-| link-preview-js | URL metadata fetching |
-
-### DevOps & Deployment
-| Technology | Purpose |
-|------------|---------|
-| Vercel | Frontend & backend hosting |
-| MongoDB Atlas | Cloud database |
 
 ---
 
 ## 📁 Project Structure
 
-### Frontend
 ```
-src/
-├── app/                  # Next.js App Router pages
-├── components/
-│   ├── shared/           # Navbar, Footer
-│   └── ui/
-│       ├── Bookmark/     # Bookmark components
-│       ├── Folder/       # Folder components
-│       └── Auth/         # Login, Register, Reset Password
-├── redux/
-│   ├── features/
-│   │   ├── auth/         # Auth slice
-│   │   └── modal/        # Modal slice
-│   └── store.ts
-├── services/             # API service functions
-├── types/                # TypeScript interfaces
-└── utils/                # Helper functions
-```
-
-### Backend
-```
-src/
-├── module/
-│   ├── auth/             # Auth routes, controller, service
-│   ├── bookmark/         # Bookmark routes, controller, service
-│   ├── folder/           # Folder routes, controller, service
-│   ├── tag/              # Tag routes, controller, service
-│   └── user/             # User routes, controller, service
-├── middleware/           # Auth, error handler, not found
-├── errors/               # Custom error classes
-├── utils/                # Helpers (sendEmail, catchAsync, etc.)
-├── config/               # Environment config
-├── app.ts
-└── server.ts
+stl-server/
+├── src/
+│   ├── app/
+│   │   ├── config/
+│   │   │   └── index.ts              # Environment config
+│   │   ├── errors/
+│   │   │   └── AppError.ts           # Custom error class
+│   │   ├── middleware/
+│   │   │   ├── auth.ts               # JWT auth middleware
+│   │   │   ├── globalErrorHandler.ts # Global error handler
+│   │   │   ├── notFound.ts           # 404 handler
+│   │   │   └── validateRequest.ts    # Zod validation middleware
+│   │   ├── module/
+│   │   │   ├── auth/
+│   │   │   │   ├── auth.controller.ts
+│   │   │   │   ├── auth.route.ts
+│   │   │   │   ├── auth.service.ts
+│   │   │   │   └── auth.validation.ts
+│   │   │   ├── bookmark/
+│   │   │   │   ├── bookmark.controller.ts
+│   │   │   │   ├── bookmark.interface.ts
+│   │   │   │   ├── bookmark.model.ts
+│   │   │   │   ├── bookmark.route.ts
+│   │   │   │   ├── bookmark.service.ts
+│   │   │   │   └── bookmark.validation.ts
+│   │   │   ├── folder/
+│   │   │   │   ├── folder.controller.ts
+│   │   │   │   ├── folder.interface.ts
+│   │   │   │   ├── folder.model.ts
+│   │   │   │   ├── folder.route.ts
+│   │   │   │   ├── folder.service.ts
+│   │   │   │   └── folder.validation.ts
+│   │   │   ├── tag/
+│   │   │   │   ├── tag.controller.ts
+│   │   │   │   ├── tag.interface.ts
+│   │   │   │   ├── tag.model.ts
+│   │   │   │   ├── tag.route.ts
+│   │   │   │   ├── tag.service.ts
+│   │   │   │   └── tag.validation.ts
+│   │   │   └── user/
+│   │   │       ├── user.controller.ts
+│   │   │       ├── user.interface.ts
+│   │   │       ├── user.model.ts
+│   │   │       ├── user.route.ts
+│   │   │       └── user.service.ts
+│   │   ├── types/
+│   │   │   └── index.d.ts            # Global type declarations
+│   │   └── utils/
+│   │       ├── catchAsync.ts         # Async error wrapper
+│   │       ├── sendEmail.ts          # Nodemailer email utility
+│   │       ├── sendResponse.ts       # Consistent API response
+│   │       ├── verifyToken.ts        # JWT token verification
+│   │       └── QueryBuilder.ts       # Search/filter/sort/paginate
+│   ├── app.ts                        # Express app setup
+│   └── server.ts                     # Server entry point
+├── dist/                             # Compiled output
+├── .env                              # Environment variables
+├── .gitignore
+├── eslint.config.js
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
 ---
 
 ## 🔑 Environment Variables
 
-### Frontend `.env.local`
-```env
-NEXT_PUBLIC_BASE_API=http://localhost:5000/api/v1
-NEXT_PUBLIC_CLIENT_URL=http://localhost:3000
-```
+Create a `.env` file in the root directory:
 
-### Backend `.env`
 ```env
+# Server
 PORT=5000
+NODE_ENV=development
+
+# Database
 DATABASE_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/stl
-JWT_ACCESS_SECRET=your_access_secret
-JWT_REFRESH_SECRET=your_refresh_secret
+
+# JWT
+JWT_ACCESS_SECRET=your_super_secret_access_key
+JWT_REFRESH_SECRET=your_super_secret_refresh_key
 JWT_ACCESS_EXPIRES_IN=7d
 JWT_REFRESH_EXPIRES_IN=30d
+
+# Bcrypt
 BCRYPT_SALT_ROUND=12
+
+# Nodemailer (Gmail)
 NODEMAILER_USER_EMAIL=your_gmail@gmail.com
 NODEMAILER_USER_PASS=your_gmail_app_password
+
+# Client
 CLIENT_URL=http://localhost:3000
-NODE_ENV=development
+```
+
+### Gmail App Password Setup
+
+1. Go to your Google Account → Security
+2. Enable 2-Step Verification
+3. Go to App Passwords
+4. Generate a new app password for "Mail"
+5. Use that password as `NODEMAILER_USER_PASS`
+
+---
+
+## 📡 API Reference
+
+### Response Format
+
+All API responses follow this structure:
+
+```json
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": {},
+  "meta": {
+    "total": 100,
+    "page": 1,
+    "limit": 10,
+    "totalPage": 10
+  }
+}
+```
+
+### Error Response Format
+
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "errorSources": [
+    {
+      "path": "field",
+      "message": "Specific error"
+    }
+  ],
+  "stack": "Error stack (development only)"
+}
 ```
 
 ---
 
-## 📡 API Documentation
+### 🔐 Auth Routes
 
-### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register` | Register new user |
-| POST | `/api/v1/auth/login` | Login user |
-| POST | `/api/v1/auth/refresh-token` | Refresh access token |
-| POST | `/api/v1/auth/send-otp` | Send reset OTP to email |
-| POST | `/api/v1/auth/verify-otp` | Verify OTP |
-| PATCH | `/api/v1/auth/reset-password` | Reset password |
+**Base:** `/api/v1/auth`
 
-### Bookmarks
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/bookmark` | Get all bookmarks |
-| POST | `/api/v1/bookmark/create` | Create bookmark |
-| PUT | `/api/v1/bookmark/:id` | Update bookmark |
-| DELETE | `/api/v1/bookmark/:id` | Delete bookmark |
-| PATCH | `/api/v1/bookmark/pin` | Toggle pin bookmarks |
-| PATCH | `/api/v1/bookmark/add-to-folder` | Move to folder |
-| GET | `/api/v1/bookmark/link-preview` | Get URL metadata |
+#### Register
+```http
+POST /api/v1/auth/register
+Content-Type: application/json
 
-### Folders
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/folder` | Get all folders |
-| POST | `/api/v1/folder/create` | Create folder |
-| PATCH | `/api/v1/folder/:id` | Update folder |
-| DELETE | `/api/v1/folder/:id` | Delete folder |
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
 
-### Tags
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/tag` | Get all tags |
-| POST | `/api/v1/tag/create` | Create tag |
-| DELETE | `/api/v1/tag/:id` | Delete tag |
+#### Login
+```http
+POST /api/v1/auth/login
+Content-Type: application/json
 
-### Query Parameters (Bookmarks)
-| Param | Type | Description |
-|-------|------|-------------|
-| `searchTerm` | string | Search by title, URL, description, tag name |
-| `sort` | string | `-createdAt`, `createdAt`, `title`, `-title`, `-updatedAt` |
-| `tags` | string | Comma-separated tag IDs |
-| `folder` | string | Folder ID |
-| `isFavorite` | boolean | Filter favorites |
-| `isPinned` | boolean | Filter pinned |
-| `page` | number | Page number |
-| `limit` | number | Items per page |
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiJ9..."
+  }
+}
+```
+
+#### Refresh Token
+```http
+POST /api/v1/auth/refresh-token
+Authorization: Bearer <refreshToken>
+```
+
+#### Send OTP
+```http
+POST /api/v1/auth/send-otp
+Content-Type: application/json
+
+{
+  "email": "john@example.com"
+}
+```
+
+#### Verify OTP
+```http
+POST /api/v1/auth/verify-otp
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "otp": "123456"
+}
+```
+
+#### Reset Password
+```http
+PATCH /api/v1/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "newPassword": "newpassword123"
+}
+```
 
 ---
 
-## 🤝 Contributing
+### 👤 User Routes
 
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -m 'Add my feature'`
-4. Push to the branch: `git push origin feature/my-feature`
-5. Open a Pull Request
+**Base:** `/api/v1/user` | 🔒 Requires Auth
+
+#### Get My Profile
+```http
+GET /api/v1/user/me
+Authorization: Bearer <accessToken>
+```
+
+#### Update Profile
+```http
+PATCH /api/v1/user/me
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "name": "New Name",
+  "image": "https://image-url.com/photo.jpg"
+}
+```
+
+---
+
+### 🔖 Bookmark Routes
+
+**Base:** `/api/v1/bookmark` | 🔒 Requires Auth
+
+#### Get All Bookmarks
+```http
+GET /api/v1/bookmark
+Authorization: Bearer <accessToken>
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Example | Description |
+|-----------|------|---------|-------------|
+| `searchTerm` | string | `github` | Search title, URL, description, tag name |
+| `sort` | string | `-createdAt` | Sort field (prefix `-` for descending) |
+| `tags` | string | `id1,id2,id3` | Filter by tag IDs (comma separated) |
+| `folder` | string | `folderId` | Filter by folder ID |
+| `isFavorite` | boolean | `true` | Filter favorites |
+| `isPinned` | boolean | `true` | Filter pinned |
+| `page` | number | `1` | Page number |
+| `limit` | number | `10` | Items per page |
+
+**Sort Options:**
+
+| Value | Description |
+|-------|-------------|
+| `-createdAt` | Newest first (default) |
+| `createdAt` | Oldest first |
+| `-updatedAt` | Recently updated |
+| `title` | Title A to Z |
+| `-title` | Title Z to A |
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "pinnedBookmarks": [],
+    "folders": [
+      {
+        "_id": "folderId",
+        "name": "Work",
+        "bookmarks": []
+      }
+    ],
+    "bookmarks": []
+  },
+  "meta": {
+    "total": 50,
+    "page": 1,
+    "limit": 10,
+    "totalPage": 5
+  }
+}
+```
+
+#### Create Bookmark
+```http
+POST /api/v1/bookmark/create
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "url": "https://github.com",
+  "title": "GitHub",
+  "description": "Where the world builds software",
+  "image": "https://github.com/og-image.png",
+  "favicon": "https://github.com/favicon.ico",
+  "domain": "github.com",
+  "siteName": "GitHub",
+  "notes": "My personal notes",
+  "isPinned": false,
+  "isFavorite": false,
+  "tags": ["tagId1", "tagId2"],
+  "folder": "folderId"
+}
+```
+
+#### Update Bookmark
+```http
+PUT /api/v1/bookmark/:id
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "notes": "Updated notes",
+  "tags": ["tagId1"],
+  "folder": "folderId",
+  "isFavorite": true,
+  "isPublic": true
+}
+```
+
+#### Delete Bookmark
+```http
+DELETE /api/v1/bookmark/:id
+Authorization: Bearer <accessToken>
+```
+
+#### Toggle Pin Bookmarks
+```http
+PATCH /api/v1/bookmark/pin
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "bookmarkIds": ["id1", "id2"],
+  "isPinned": true
+}
+```
+
+#### Add to Folder
+```http
+PATCH /api/v1/bookmark/add-to-folder
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "bookmarkIds": ["id1", "id2"],
+  "folderId": "folderId"
+}
+```
+
+#### Link Preview
+```http
+GET /api/v1/bookmark/link-preview?url=https://github.com
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "title": "GitHub",
+    "description": "Where the world builds software",
+    "images": ["https://og-image.png"],
+    "favicons": ["https://favicon.ico"],
+    "siteName": "GitHub",
+    "domain": "github.com"
+  }
+}
+```
+
+---
+
+### 📁 Folder Routes
+
+**Base:** `/api/v1/folder` | 🔒 Requires Auth
+
+#### Get All Folders
+```http
+GET /api/v1/folder
+Authorization: Bearer <accessToken>
+```
+
+#### Create Folder
+```http
+POST /api/v1/folder/create
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "name": "Work"
+}
+```
+
+#### Update Folder
+```http
+PATCH /api/v1/folder/:id
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "name": "New Folder Name"
+}
+```
+
+#### Delete Folder
+```http
+DELETE /api/v1/folder/:id
+Authorization: Bearer <accessToken>
+```
+
+> ⚠️ Deleting a folder removes the folder and unlinks all bookmarks from it (bookmarks are NOT deleted).
+
+---
+
+### 🏷️ Tag Routes
+
+**Base:** `/api/v1/tag` | 🔒 Requires Auth
+
+#### Get All Tags
+```http
+GET /api/v1/tag
+Authorization: Bearer <accessToken>
+```
+
+#### Create Tag
+```http
+POST /api/v1/tag/create
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+
+{
+  "name": "Development",
+  "color": "#1A8CFF"
+}
+```
+
+#### Delete Tag
+```http
+DELETE /api/v1/tag/:id
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## 🗄️ Database Schema
+
+### User
+```typescript
+{
+  name: String,           // required
+  email: String,          // required, unique, lowercase
+  image: String,          // optional
+  password: String,       // required, select: false
+  isDeleted: Boolean,     // default: false
+  resetPasswordOtp: String,    // default: null
+  resetPasswordExpires: Date,  // default: null
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Bookmark
+```typescript
+{
+  url: String,            // required
+  domain: String,
+  title: String,          // required
+  description: String,
+  image: String,
+  favicon: String,
+  siteName: String,
+  notes: String,
+  previewStatus: Enum,    // PENDING | SUCCESS | FAILED
+  isPinned: Boolean,      // default: false
+  pinnedAt: Date,
+  isFavorite: Boolean,    // default: false
+  isPublic: Boolean,      // default: false
+  visitCount: Number,     // default: 0
+  lastVisitedAt: Date,
+  tags: [ObjectId],       // ref: Tag
+  folder: ObjectId,       // ref: Folder
+  user: ObjectId,         // ref: User, required
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Folder
+```typescript
+{
+  name: String,           // required
+  userId: ObjectId,       // ref: User, required
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Tag
+```typescript
+{
+  name: String,           // required
+  color: String,          // required (hex color)
+  userId: ObjectId,       // ref: User, required
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+---
+
+## 🔒 Security
+
+### Authentication Flow
+```
+1. User registers/logs in
+2. Server returns accessToken (7d) + refreshToken (30d)
+3. Client stores tokens in httpOnly cookies
+4. Every request sends accessToken in Authorization header
+5. When accessToken expires → client uses refreshToken to get new one
+6. When refreshToken expires → user must login again
+```
+
+### Security Measures
+- **Helmet** — sets secure HTTP headers
+- **Rate Limiting** — 100 requests per 15 minutes per IP
+- **Bcrypt** — passwords hashed with salt rounds
+- **JWT** — signed tokens with expiry
+- **Zod** — all inputs validated before processing
+- **Mongoose hooks** — prevents operations on deleted users
+- **CORS** — restricted to CLIENT_URL only
+- **httpOnly Cookies** — tokens not accessible via JavaScript
+
+---
+
+## ⚠️ Error Handling
+
+The server handles these error types automatically:
+
+| Error Type | Status Code | Description |
+|------------|-------------|-------------|
+| `AppError` | Custom | Business logic errors |
+| `ZodError` | 400 | Validation errors |
+| `CastError` | 400 | Invalid MongoDB ID |
+| `ValidationError` | 400 | Mongoose validation |
+| `JsonWebTokenError` | 401 | Invalid token |
+| `TokenExpiredError` | 401 | Expired token |
+| `11000 (Duplicate)` | 400 | Duplicate unique field |
+
+### Global Error Handler
+All errors are caught by the global error handler which returns a consistent error response format. Stack traces are only included in `development` mode.
+
+---
+
+## 🗂️ QueryBuilder
+
+The `QueryBuilder` class provides a chainable API for building complex queries:
+
+```typescript
+const result = new QueryBuilder(
+  bookmarkModel.find({ user: userId }),
+  req.query
+)
+  .search(['title', 'url', 'description', 'siteName'])
+  .filter()    // handles tags, folder, isFavorite, isPinned
+  .sort()      // ?sort=-createdAt
+  .paginate()  // ?page=1&limit=10
+  .fields();   // ?fields=title,url
+
+const data = await result.queryModel;
+const meta = await result.countTotal();
+```
+
+---
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Login
+vercel login
+
+# Deploy
+vercel --prod
+```
+
+### Environment Variables on Vercel
+
+Go to **Vercel Dashboard → Project → Settings → Environment Variables** and add all variables from `.env`.
+
+### MongoDB Atlas Setup
+
+1. Create a cluster on [MongoDB Atlas](https://cloud.mongodb.com)
+2. Create a database user
+3. Whitelist all IPs: `0.0.0.0/0` (required for Vercel)
+4. Copy the connection string to `DATABASE_URL`
+
+### `vercel.json`
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/server.js"
+    }
+  ],
+  "functions": {
+    "dist/server.js": {
+      "maxDuration": 10
+    }
+  }
+}
+```
+
+---
+
+## 🧪 Testing API with Thunder Client / Postman
+
+Import the following base configuration:
+
+```json
+{
+  "baseUrl": "http://localhost:5000/api/v1",
+  "headers": {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer {{accessToken}}"
+  }
+}
+```
 
 ---
 
