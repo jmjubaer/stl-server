@@ -6,17 +6,17 @@
 
 ## 📖 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Environment Variables](#environment-variables)
-- [API Reference](#api-reference)
-- [Database Schema](#database-schema)
-- [Security](#security)
-- [Error Handling](#error-handling)
-- [Deployment](#deployment)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Technology Stack](#-technology-stack)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Environment Variables](#-environment-variables)
+- [API Reference](#-api-reference)
+- [Database Schema](#-database-schema)
+- [Security](#-security)
+- [Error Handling](#-error-handling)
+- [Deployment](#-deployment)
 
 ---
 
@@ -24,7 +24,7 @@
 
 The STL Server is a RESTful API that powers the Save The Link application. It handles user authentication, bookmark management, folder organization, tag management, and link preview fetching.
 
-**Base URL (Production):** `https://your-server.vercel.app/api/v1`
+**Base URL (Production):** `https://stl-server.vercel.app/api/v1`
 
 **Base URL (Development):** `http://localhost:5000/api/v1`
 
