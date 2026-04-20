@@ -1,4 +1,4 @@
-import { Router } from 'express';
+  import { Router } from 'express';
 import { bookmarkControllers } from './bookmark.controller';
 import { auth } from '../../middleware/auth';
 import { validateRequest } from '../../middleware/validateRequest';
