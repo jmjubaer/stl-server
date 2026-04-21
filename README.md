@@ -27,6 +27,7 @@ The STL Server is a RESTful API that powers the Save The Link application. It ha
 **Base URL (Production):** `https://stl-server.vercel.app/api/v1`
 
 **Base URL (Development):** `http://localhost:5000/api/v1`
+🌐 **API Collection:** [Postman Collection](https://shadow-avengers4.postman.co/workspace/My-Workspace~deeea427-9d40-4d15-854d-fab4af1e5f40/collection/39939908-cd42b76d-8522-482c-b306-742bea6b1d59?action=share&source=copy-link&creator=39939908)
 
 ---
 
@@ -38,7 +39,7 @@ The STL Server is a RESTful API that powers the Save The Link application. It ha
 - ✅ Bookmark CRUD with link preview metadata
 - ✅ Folder management with cascade delete
 - ✅ Tag management with color support
-- ✅ Advanced search, filter, sort & pagination via QueryBuilder
+- ✅ Advanced search, filter, sort via QueryBuilder
 - ✅ Pin/unpin bookmarks
 - ✅ Mongoose pre/post hooks for data integrity
 - ✅ Global error handling
@@ -50,23 +51,23 @@ The STL Server is a RESTful API that powers the Save The Link application. It ha
 
 ## 🛠️ Technology Stack
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | 18+ | Runtime |
-| Express.js | 4+ | Web framework |
-| TypeScript | 5+ | Type safety |
-| MongoDB | 6+ | Database |
-| Mongoose | 8+ | ODM |
-| JWT | - | Authentication |
-| Bcrypt | - | Password hashing |
-| Nodemailer | - | Email sending (OTP) |
-| Zod | - | Request validation |
-| link-preview-js | - | URL metadata fetching |
-| Helmet | - | Security headers |
-| express-rate-limit | - | Rate limiting |
-| http-status-codes | - | HTTP status codes |
-| cookie-parser | - | Cookie parsing |
-| cors | - | Cross-origin requests |
+| Technology         | Version | Purpose               |
+| ------------------ | ------- | --------------------- |
+| Node.js            | 18+     | Runtime               |
+| Express.js         | 4+      | Web framework         |
+| TypeScript         | 5+      | Type safety           |
+| MongoDB            | 6+      | Database              |
+| Mongoose           | 8+      | ODM                   |
+| JWT                | -       | Authentication        |
+| Bcrypt             | -       | Password hashing      |
+| Nodemailer         | -       | Email sending (OTP)   |
+| Zod                | -       | Request validation    |
+| link-preview-js    | -       | URL metadata fetching |
+| Helmet             | -       | Security headers      |
+| express-rate-limit | -       | Rate limiting         |
+| http-status-codes  | -       | HTTP status codes     |
+| cookie-parser      | -       | Cookie parsing        |
+| cors               | -       | Cross-origin requests |
 
 ---
 
@@ -82,7 +83,7 @@ The STL Server is a RESTful API that powers the Save The Link application. It ha
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/stl-server.git
+git clone https://github.com/jmjubaer/stl-server.git
 cd stl-server
 
 # Install dependencies
@@ -118,59 +119,58 @@ npm run lint      # Run ESLint
 ```
 stl-server/
 ├── src/
-│   ├── app/
-│   │   ├── config/
-│   │   │   └── index.ts              # Environment config
-│   │   ├── errors/
-│   │   │   └── AppError.ts           # Custom error class
-│   │   ├── middleware/
-│   │   │   ├── auth.ts               # JWT auth middleware
-│   │   │   ├── globalErrorHandler.ts # Global error handler
-│   │   │   ├── notFound.ts           # 404 handler
-│   │   │   └── validateRequest.ts    # Zod validation middleware
-│   │   ├── module/
-│   │   │   ├── auth/
-│   │   │   │   ├── auth.controller.ts
-│   │   │   │   ├── auth.route.ts
-│   │   │   │   ├── auth.service.ts
-│   │   │   │   └── auth.validation.ts
-│   │   │   ├── bookmark/
-│   │   │   │   ├── bookmark.controller.ts
-│   │   │   │   ├── bookmark.interface.ts
-│   │   │   │   ├── bookmark.model.ts
-│   │   │   │   ├── bookmark.route.ts
-│   │   │   │   ├── bookmark.service.ts
-│   │   │   │   └── bookmark.validation.ts
-│   │   │   ├── folder/
-│   │   │   │   ├── folder.controller.ts
-│   │   │   │   ├── folder.interface.ts
-│   │   │   │   ├── folder.model.ts
-│   │   │   │   ├── folder.route.ts
-│   │   │   │   ├── folder.service.ts
-│   │   │   │   └── folder.validation.ts
-│   │   │   ├── tag/
-│   │   │   │   ├── tag.controller.ts
-│   │   │   │   ├── tag.interface.ts
-│   │   │   │   ├── tag.model.ts
-│   │   │   │   ├── tag.route.ts
-│   │   │   │   ├── tag.service.ts
-│   │   │   │   └── tag.validation.ts
-│   │   │   └── user/
-│   │   │       ├── user.controller.ts
-│   │   │       ├── user.interface.ts
-│   │   │       ├── user.model.ts
-│   │   │       ├── user.route.ts
-│   │   │       └── user.service.ts
-│   │   ├── types/
-│   │   │   └── index.d.ts            # Global type declarations
-│   │   └── utils/
-│   │       ├── catchAsync.ts         # Async error wrapper
-│   │       ├── sendEmail.ts          # Nodemailer email utility
-│   │       ├── sendResponse.ts       # Consistent API response
-│   │       ├── verifyToken.ts        # JWT token verification
-│   │       └── QueryBuilder.ts       # Search/filter/sort/paginate
-│   ├── app.ts                        # Express app setup
-│   └── server.ts                     # Server entry point
+│   ├── config/
+│   │   └── index.ts              # Environment config
+│   ├── errors/
+│   │   └── AppError.ts           # Custom error class
+│   ├── middleware/
+│   │   ├── auth.ts               # JWT auth middleware
+│   │   ├── globalErrorHandler.ts # Global error handler
+│   │   ├── notFound.ts           # 404 handler
+│   │   └── validateRequest.ts    # Zod validation middleware
+│   ├── module/
+│   │   ├── auth/
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.route.ts
+│   │   │   ├── auth.service.ts
+│   │   │   └── auth.validation.ts
+│   │   ├── bookmark/
+│   │   │   ├── bookmark.controller.ts
+│   │   │   ├── bookmark.interface.ts
+│   │   │   ├── bookmark.model.ts
+│   │   │   ├── bookmark.route.ts
+│   │   │   ├── bookmark.service.ts
+│   │   │   └── bookmark.validation.ts
+│   │   ├── folder/
+│   │   │   ├── folder.controller.ts
+│   │   │   ├── folder.interface.ts
+│   │   │   ├── folder.model.ts
+│   │   │   ├── folder.route.ts
+│   │   │   ├── folder.service.ts
+│   │   │   └── folder.validation.ts
+│   │   ├── tag/
+│   │   │   ├── tag.controller.ts
+│   │   │   ├── tag.interface.ts
+│   │   │   ├── tag.model.ts
+│   │   │   ├── tag.route.ts
+│   │   │   ├── tag.service.ts
+│   │   │   └── tag.validation.ts
+│   │   └── user/
+│   │       ├── user.controller.ts
+│   │       ├── user.interface.ts
+│   │       ├── user.model.ts
+│   │       ├── user.route.ts
+│   │       └── user.service.ts
+│   ├── types/
+│   │   └── index.d.ts            # Global type declarations
+│   └── utils/
+│   │   ├── catchAsync.ts         # Async error wrapper
+│   │   ├── sendEmail.ts          # Nodemailer email utility
+│   │   ├── sendResponse.ts       # Consistent API response
+│   │   ├── verifyToken.ts        # JWT token verification
+│   │   └── QueryBuilder.ts       # Search/filter/sort/paginate
+│   ├── app.ts                    # Express app setup
+│   └── server.ts                 # Server entry point
 ├── dist/                             # Compiled output
 ├── .env                              # Environment variables
 ├── .gitignore
@@ -231,13 +231,7 @@ All API responses follow this structure:
 {
   "success": true,
   "message": "Operation successful",
-  "data": {},
-  "meta": {
-    "total": 100,
-    "page": 1,
-    "limit": 10,
-    "totalPage": 10
-  }
+  "data": {}
 }
 ```
 
@@ -264,8 +258,9 @@ All API responses follow this structure:
 **Base:** `/api/v1/auth`
 
 #### Register
+
 ```http
-POST /api/v1/auth/register
+POST /api/v1/user/create
 Content-Type: application/json
 
 {
@@ -276,6 +271,7 @@ Content-Type: application/json
 ```
 
 #### Login
+
 ```http
 POST /api/v1/auth/login
 Content-Type: application/json
@@ -287,6 +283,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -298,12 +295,14 @@ Content-Type: application/json
 ```
 
 #### Refresh Token
+
 ```http
-POST /api/v1/auth/refresh-token
-Authorization: Bearer <refreshToken>
+POST /api/v1/auth/access-token
+Authorization: <refreshToken>
 ```
 
 #### Send OTP
+
 ```http
 POST /api/v1/auth/send-otp
 Content-Type: application/json
@@ -314,6 +313,7 @@ Content-Type: application/json
 ```
 
 #### Verify OTP
+
 ```http
 POST /api/v1/auth/verify-otp
 Content-Type: application/json
@@ -325,6 +325,7 @@ Content-Type: application/json
 ```
 
 #### Reset Password
+
 ```http
 PATCH /api/v1/auth/reset-password
 Content-Type: application/json
@@ -342,20 +343,23 @@ Content-Type: application/json
 **Base:** `/api/v1/user` | 🔒 Requires Auth
 
 #### Get My Profile
+
 ```http
 GET /api/v1/user/me
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 #### Update Profile
+
 ```http
-PATCH /api/v1/user/me
-Authorization: Bearer <accessToken>
+PATCH /api/v1/user/me/update
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
   "name": "New Name",
-  "image": "https://image-url.com/photo.jpg"
+  "image": "https://image-url.com/photo.jpg",
+  ...
 }
 ```
 
@@ -366,35 +370,33 @@ Content-Type: application/json
 **Base:** `/api/v1/bookmark` | 🔒 Requires Auth
 
 #### Get All Bookmarks
+
 ```http
 GET /api/v1/bookmark
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 **Query Parameters:**
 
-| Parameter | Type | Example | Description |
-|-----------|------|---------|-------------|
-| `searchTerm` | string | `github` | Search title, URL, description, tag name |
-| `sort` | string | `-createdAt` | Sort field (prefix `-` for descending) |
-| `tags` | string | `id1,id2,id3` | Filter by tag IDs (comma separated) |
-| `folder` | string | `folderId` | Filter by folder ID |
-| `isFavorite` | boolean | `true` | Filter favorites |
-| `isPinned` | boolean | `true` | Filter pinned |
-| `page` | number | `1` | Page number |
-| `limit` | number | `10` | Items per page |
+| Parameter    | Type   | Example       | Description                              |
+| ------------ | ------ | ------------- | ---------------------------------------- |
+| `searchTerm` | string | `github`      | Search title, URL, description, tag name |
+| `sort`       | string | `-createdAt`  | Sort field (prefix `-` for descending)   |
+| `tags`       | string | `id1,id2,id3` | Filter by tag IDs (comma separated)      |
+| `folder`     | string | `folderId`    | Filter by folder ID                      |
 
 **Sort Options:**
 
-| Value | Description |
-|-------|-------------|
+| Value        | Description            |
+| ------------ | ---------------------- |
 | `-createdAt` | Newest first (default) |
-| `createdAt` | Oldest first |
-| `-updatedAt` | Recently updated |
-| `title` | Title A to Z |
-| `-title` | Title Z to A |
+| `createdAt`  | Oldest first           |
+| `-updatedAt` | Recently updated       |
+| `title`      | Title A to Z           |
+| `-title`     | Title Z to A           |
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -419,9 +421,10 @@ Authorization: Bearer <accessToken>
 ```
 
 #### Create Bookmark
+
 ```http
 POST /api/v1/bookmark/create
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -441,9 +444,10 @@ Content-Type: application/json
 ```
 
 #### Update Bookmark
+
 ```http
 PUT /api/v1/bookmark/:id
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -457,12 +461,14 @@ Content-Type: application/json
 ```
 
 #### Delete Bookmark
+
 ```http
 DELETE /api/v1/bookmark/:id
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 #### Toggle Pin Bookmarks
+
 ```http
 PATCH /api/v1/bookmark/pin
 Authorization: Bearer <accessToken>
@@ -475,9 +481,10 @@ Content-Type: application/json
 ```
 
 #### Add to Folder
+
 ```http
 PATCH /api/v1/bookmark/add-to-folder
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -487,11 +494,13 @@ Content-Type: application/json
 ```
 
 #### Link Preview
+
 ```http
 GET /api/v1/bookmark/link-preview?url=https://github.com
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -513,15 +522,17 @@ GET /api/v1/bookmark/link-preview?url=https://github.com
 **Base:** `/api/v1/folder` | 🔒 Requires Auth
 
 #### Get All Folders
+
 ```http
 GET /api/v1/folder
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 #### Create Folder
+
 ```http
 POST /api/v1/folder/create
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -530,9 +541,10 @@ Content-Type: application/json
 ```
 
 #### Update Folder
+
 ```http
 PATCH /api/v1/folder/:id
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -541,9 +553,10 @@ Content-Type: application/json
 ```
 
 #### Delete Folder
+
 ```http
 DELETE /api/v1/folder/:id
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 > ⚠️ Deleting a folder removes the folder and unlinks all bookmarks from it (bookmarks are NOT deleted).
@@ -555,15 +568,17 @@ Authorization: Bearer <accessToken>
 **Base:** `/api/v1/tag` | 🔒 Requires Auth
 
 #### Get All Tags
+
 ```http
 GET /api/v1/tag
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 #### Create Tag
+
 ```http
 POST /api/v1/tag/create
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 Content-Type: application/json
 
 {
@@ -573,9 +588,10 @@ Content-Type: application/json
 ```
 
 #### Delete Tag
+
 ```http
 DELETE /api/v1/tag/:id
-Authorization: Bearer <accessToken>
+Authorization: <accessToken>
 ```
 
 ---
@@ -583,6 +599,7 @@ Authorization: Bearer <accessToken>
 ## 🗄️ Database Schema
 
 ### User
+
 ```typescript
 {
   name: String,           // required
@@ -598,6 +615,7 @@ Authorization: Bearer <accessToken>
 ```
 
 ### Bookmark
+
 ```typescript
 {
   url: String,            // required
@@ -624,6 +642,7 @@ Authorization: Bearer <accessToken>
 ```
 
 ### Folder
+
 ```typescript
 {
   name: String,           // required
@@ -634,6 +653,7 @@ Authorization: Bearer <accessToken>
 ```
 
 ### Tag
+
 ```typescript
 {
   name: String,           // required
@@ -649,16 +669,17 @@ Authorization: Bearer <accessToken>
 ## 🔒 Security
 
 ### Authentication Flow
+
 ```
 1. User registers/logs in
-2. Server returns accessToken (7d) + refreshToken (30d)
-3. Client stores tokens in httpOnly cookies
+2. Server returns accessToken (30d) + refreshToken (90d)
+3. Client stores tokens in local storage
 4. Every request sends accessToken in Authorization header
-5. When accessToken expires → client uses refreshToken to get new one
-6. When refreshToken expires → user must login again
+5. When accessToken expires → Show error alert and logout
 ```
 
 ### Security Measures
+
 - **Helmet** — sets secure HTTP headers
 - **Rate Limiting** — 100 requests per 15 minutes per IP
 - **Bcrypt** — passwords hashed with salt rounds
@@ -666,7 +687,6 @@ Authorization: Bearer <accessToken>
 - **Zod** — all inputs validated before processing
 - **Mongoose hooks** — prevents operations on deleted users
 - **CORS** — restricted to CLIENT_URL only
-- **httpOnly Cookies** — tokens not accessible via JavaScript
 
 ---
 
@@ -674,17 +694,18 @@ Authorization: Bearer <accessToken>
 
 The server handles these error types automatically:
 
-| Error Type | Status Code | Description |
-|------------|-------------|-------------|
-| `AppError` | Custom | Business logic errors |
-| `ZodError` | 400 | Validation errors |
-| `CastError` | 400 | Invalid MongoDB ID |
-| `ValidationError` | 400 | Mongoose validation |
-| `JsonWebTokenError` | 401 | Invalid token |
-| `TokenExpiredError` | 401 | Expired token |
-| `11000 (Duplicate)` | 400 | Duplicate unique field |
+| Error Type          | Status Code | Description            |
+| ------------------- | ----------- | ---------------------- |
+| `AppError`          | Custom      | Business logic errors  |
+| `ZodError`          | 400         | Validation errors      |
+| `CastError`         | 400         | Invalid MongoDB ID     |
+| `ValidationError`   | 400         | Mongoose validation    |
+| `JsonWebTokenError` | 401         | Invalid token          |
+| `TokenExpiredError` | 401         | Expired token          |
+| `11000 (Duplicate)` | 400         | Duplicate unique field |
 
 ### Global Error Handler
+
 All errors are caught by the global error handler which returns a consistent error response format. Stack traces are only included in `development` mode.
 
 ---
@@ -694,18 +715,14 @@ All errors are caught by the global error handler which returns a consistent err
 The `QueryBuilder` class provides a chainable API for building complex queries:
 
 ```typescript
-const result = new QueryBuilder(
-  bookmarkModel.find({ user: userId }),
-  req.query
-)
+const result = new QueryBuilder(bookmarkModel.find({ user: userId }), req.query)
   .search(['title', 'url', 'description', 'siteName'])
-  .filter()    // handles tags, folder, isFavorite, isPinned
-  .sort()      // ?sort=-createdAt
-  .paginate()  // ?page=1&limit=10
-  .fields();   // ?fields=title,url
+  .filter() // handles tags, folder, isFavorite, isPinned
+  .sort() // ?sort=-createdAt
+  .fields(); // ?fields=title,url
 
 const data = await result.queryModel;
-const meta = await result.countTotal();
+// const meta = await result.countTotal();
 ```
 
 ---
@@ -737,6 +754,7 @@ Go to **Vercel Dashboard → Project → Settings → Environment Variables** an
 4. Copy the connection string to `DATABASE_URL`
 
 ### `vercel.json`
+
 ```json
 {
   "version": 2,
@@ -771,21 +789,15 @@ Import the following base configuration:
   "baseUrl": "http://localhost:5000/api/v1",
   "headers": {
     "Content-Type": "application/json",
-    "Authorization": "Bearer {{accessToken}}"
+    "Authorization": "{{accessToken}}"
   }
 }
 ```
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 👨‍💻 Author
 
-Built with ❤️ by the STL Team
+Built with ❤️ by the Md Jubaer Jm
 
-🌐 [save-the-link.vercel.app](https://save-the-link.vercel.app)
+🌐 [MD JUBAER](https://www.linkedin.com/in/jmjubaer/)
