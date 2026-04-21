@@ -28,7 +28,7 @@ The STL Server is a RESTful API that powers the Save The Link application. It ha
 
 **Base URL (Development):** `http://localhost:5000/api/v1`\
 
-🌐 **API Collection:** [Postman Collection](https://shadow-avengers4.postman.co/workspace/My-Workspace~deeea427-9d40-4d15-854d-fab4af1e5f40/collection/39939908-cd42b76d-8522-482c-b306-742bea6b1d59?action=share&source=copy-link&creator=39939908)
+**API Collection:** [Postman Collection](https://shadow-avengers4.postman.co/workspace/My-Workspace~deeea427-9d40-4d15-854d-fab4af1e5f40/collection/39939908-cd42b76d-8522-482c-b306-742bea6b1d59?action=share&source=copy-link&creator=39939908)
 
 ---
 
