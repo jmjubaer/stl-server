@@ -7,6 +7,7 @@ exports.userControllers = void 0;
 const user_services_1 = require("./user.services");
 const catchAsync_1 = require("../../utils/catchAsync");
 const sendSeponse_1 = __importDefault(require("../../utils/sendSeponse"));
+const http_status_codes_1 = require("http-status-codes");
 const createUser = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const data = req.body;
     const result = await user_services_1.userServices.createUserIntoDb(data);
@@ -42,8 +43,18 @@ const updateMe = (0, catchAsync_1.catchAsync)(async (req, res) => {
         data: result,
     });
 });
+const sendFeedback = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await user_services_1.userServices.sendFeedbackService(req.body);
+    (0, sendSeponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: 'Feedback sent successfully',
+        data: result,
+    });
+});
 exports.userControllers = {
     createUser,
     getMe,
     updateMe,
+    sendFeedback,
 };

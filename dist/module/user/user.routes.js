@@ -10,4 +10,5 @@ const router = (0, express_1.Router)();
 router.post('/create', (0, validateRequest_1.validateRequest)(user_validation_1.createUserValidationSchema), user_controllers_1.userControllers.createUser);
 router.get('/me', (0, auth_1.auth)(), user_controllers_1.userControllers.getMe);
 router.patch('/me/update', (0, auth_1.auth)(), (0, validateRequest_1.validateRequest)(user_validation_1.updateUserValidationSchema), user_controllers_1.userControllers.updateMe);
+router.post('/feedback', user_controllers_1.userControllers.sendFeedback);
 exports.userRoutes = router;

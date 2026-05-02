@@ -6,7 +6,10 @@ let server: Server;
 
 const main = async () => {
   try {
-    await mongoose.connect(config.database_url as string);
+    // console.log(config.database_url);
+    // await mongoose.connect(config.database_url as string);
+    // await mongoose.connect('mongodb+srv://first-project:jubaer12islam@cluster0.gcwme.mongodb.net/Stl?retryWrites=true&w=majority&appName=Cluster0');
+    await mongoose.connect('mongodb://first-project:jubaer12islam@cluster0-shard-00-00.gcwme.mongodb.net:27017,cluster0-shard-00-01.gcwme.mongodb.net:27017,cluster0-shard-00-02.gcwme.mongodb.net:27017/Stl?ssl=true&replicaSet=atlas-2odjtr-shard-0&authSource=admin&appName=Cluster0');
     console.log('Database connected successfully');
 
     server = app.listen(config.port, () => {

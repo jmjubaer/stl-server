@@ -3,6 +3,7 @@ import { userControllers } from './user.controllers';
 import { validateRequest } from '../../middleware/validateRequest';
 import {
   createUserValidationSchema,
+  sendFeedbackValidationSchema,
   updateUserValidationSchema,
 } from './user.validation';
 import { auth } from '../../middleware/auth';
@@ -21,6 +22,11 @@ router.patch(
   auth(),
   validateRequest(updateUserValidationSchema),
   userControllers.updateMe,
+);
+router.post(
+  '/feedback',
+  validateRequest(sendFeedbackValidationSchema),
+  userControllers.sendFeedback,
 );
 
 export const userRoutes = router;

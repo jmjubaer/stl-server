@@ -23,7 +23,10 @@ const getUserTags = catchAsync(async (req, res) => {
 });
 
 const deleteTags = catchAsync(async (req, res) => {
-  const result = await tagServices.deleteUserTagFormDb(req.params.id as string);
+  const result = await tagServices.deleteUserTagFormDb(
+    req.params.id as string,
+    req.user.id,
+  );
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

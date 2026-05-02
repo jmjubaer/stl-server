@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { userServices } from './user.services';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendSeponse';
+import { StatusCodes } from 'http-status-codes';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
@@ -39,8 +40,18 @@ const updateMe = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const sendFeedback = catchAsync(async (req, res) => {
+  const result = await userServices.sendFeedbackService(req.body);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Feedback sent successfully',
+    data: result,
+  });
+});
 export const userControllers = {
   createUser,
   getMe,
   updateMe,
+  sendFeedback,
 };

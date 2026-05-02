@@ -7,3 +7,8 @@ export type TUser = {
   resetPasswordOtp: string | null;
   resetPasswordExpires: Date | null;
 };
+export type TFeedback = {
+  name: string;
+  email: string;
+  feedbacks: { type: string; message: string }[];
+};

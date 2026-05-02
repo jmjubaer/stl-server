@@ -9,7 +9,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 let server;
 const main = async () => {
     try {
-        await mongoose_1.default.connect(config_1.default.database_url);
+        // console.log(config.database_url);
+        // await mongoose.connect(config.database_url as string);
+        await mongoose_1.default.connect('mongodb+srv://stl:stl12team@cluster0.gcwme.mongodb.net/?appName=Cluster0');
         console.log('Database connected successfully');
         server = app_1.default.listen(config_1.default.port, () => {
             console.log(`Server is running on port ${config_1.default.port}`);
