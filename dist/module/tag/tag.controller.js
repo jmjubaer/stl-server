@@ -27,7 +27,7 @@ const getUserTags = (0, catchAsync_1.catchAsync)(async (req, res) => {
     });
 });
 const deleteTags = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const result = await tag_services_1.tagServices.deleteUserTagFormDb(req.params.id);
+    const result = await tag_services_1.tagServices.deleteUserTagFormDb(req.params.id, req.user.id);
     (0, sendSeponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,

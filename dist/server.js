@@ -10,8 +10,8 @@ let server;
 const main = async () => {
     try {
         // console.log(config.database_url);
-        // await mongoose.connect(config.database_url as string);
-        await mongoose_1.default.connect('mongodb+srv://stl:stl12team@cluster0.gcwme.mongodb.net/?appName=Cluster0');
+        await mongoose_1.default.connect(config_1.default.database_url);
+        // await mongoose.connect('mongodb://first-project:jubaer12islam@cluster0-shard-00-00.gcwme.mongodb.net:27017,cluster0-shard-00-01.gcwme.mongodb.net:27017,cluster0-shard-00-02.gcwme.mongodb.net:27017/Stl?ssl=true&replicaSet=atlas-2odjtr-shard-0&authSource=admin&appName=Cluster0');
         console.log('Database connected successfully');
         server = app_1.default.listen(config_1.default.port, () => {
             console.log(`Server is running on port ${config_1.default.port}`);
